@@ -25,26 +25,26 @@ deviation above.
 <!-- Results are inserted by running 'make results' -->
 <!-- Insert results here -->
 
-{| class="wikitable sortable" style="width:100%;"
-! style="text-align:left;  width:50%" | Benchmkark name
-! style="text-align:right; width:10%;" | MHz
-! style="text-align:left;  width:10%;" | Type
-! style="text-align:right; width:10%;" | Score
-! style="text-align:right; width:20%;" | Range
-|- style="text-align:left;"
-|  style="vertical-align=middle;" rowspan="3" | RI5CY RV32IMC GCC 7.5 18-Nov-19 -Os -msave-restore
-|  style="text-align:right; vertical-align=middle;" rowspan="3" | 1
+{| class="wikitable sortable"
+! align="left"  | Benchmark name
+! align="right" | MHz
+! align="left"  | Type
+! align="right" | Score
+! align="right" | Range
+|- align="left"
+|  rowspan="3" | RI5CY RV32IMC GCC 7.5 18-Nov-19 -Os -msave-restore
+|  align="right" rowspan="3" | 1
 |  Size
-|  style="text-align:right;" | 1.02
-|  style="text-align:right;" | 0.97 - 1.07
+|  align="right" | 1.02
+|  align="right" | 0.97 - 1.07
 |-
 |  Speed
-|  style="text-align:right;" | 0.94
-|  style="text-align:right;" | 0.82 - 1.07
+|  align="right" | 0.94
+|  align="right" | 0.82 - 1.07
 |-
 |  Speed/MHz
-|  style="text-align:right;" | 0.94
-|  style="text-align:right;" | 0.82 - 1.07
+|  align="right" | 0.94
+|  align="right" | 0.82 - 1.07
 |}
 
 <!-- Results end here -->
