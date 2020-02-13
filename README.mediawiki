@@ -11,9 +11,8 @@ disappear in the future.
 
 In due course you will be able to submit pull requests with your own data.
 Regenerate the table in this readme by running
-```bash
-make results
-```
+
+ make results
 
 == Results ==
 
@@ -22,16 +21,16 @@ results relative to the baseline measurement for each benchmark. The range is
 from one geometric standard deviation below to one geometric standard
 deviation above.
 
-{| class="wikitable" style="text-align:right; width:100%;"
-! style="text-align:left; width:50%" | Benchmkark name
-! style="width:10%;" | MHz
-! style="text-align:left; style="width:10%;" | Type
-! style="width:10%;" | Score
-! style="width:20%;" | Range
 
 <!-- Results are inserted by running 'make results' -->
 <!-- Insert results here -->
 
+{| class="wikitable sortable" style="width:100%;"
+! style="text-align:left;  width:50%" | Benchmkark name
+! style="text-align:right; width:10%;" | MHz
+! style="text-align:left;  width:10%;" | Type
+! style="text-align:right; width:10%;" | Score
+! style="text-align:right; width:20%;" | Range
 |- style="text-align:left;"
 |  style="vertical-align=middle;" rowspan="3" | RI5CY RV32IMC GCC 7.5 18-Nov-19 -Os -msave-restore
 |  style="text-align:right; vertical-align=middle;" rowspan="3" | 1
@@ -46,7 +45,6 @@ deviation above.
 |  Speed/MHz
 |  style="text-align:right;" | 0.94
 |  style="text-align:right;" | 0.82 - 1.07
+|}
 
 <!-- Results end here -->
-
-|}
