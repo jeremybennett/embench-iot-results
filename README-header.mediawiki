@@ -20,3 +20,4 @@ The score for each benchmark is the geometric mean of the individual benchmark
 results relative to the baseline measurement for each benchmark. The range is
 from one geometric standard deviation below to one geometric standard
 deviation above.
+

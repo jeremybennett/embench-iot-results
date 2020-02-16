@@ -1,4 +1,6 @@
 { "name" : "RI5CY RV32IC GCC 10.0.0 18-Nov-19 -Os -msave-restore",
+  "architecture family" : "RV32",
+  "Embench version" : "0.5",
   "platform information" :
   { "nominal clock rate (MHz)" : 1,
     "max clock rate (MHz)" : "n/a",
