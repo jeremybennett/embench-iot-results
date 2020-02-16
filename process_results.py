@@ -18,201 +18,16 @@ Data are held in files in the results directory of the form
 """
 
 
-import argparse
-import logging
+import process.args
+import process.logging
+import process.data
 import os
 import re
 import sys
 import time
 
-from json import loads
-from json.decoder import JSONDecodeError
-
-# Handle for the logger
-log = logging.getLogger()
-
 # All the global parameters
 gparam = dict()
-
-
-def build_parser():
-    """Build a parser for all the arguments"""
-    parser = argparse.ArgumentParser(description='Collate benchmark results')
-
-    parser.add_argument(
-        '--resdir',
-        type=str,
-        default='results',
-        help='Directory holding the results files',
-    )
-    parser.add_argument(
-        '--logdir',
-        type=str,
-        default='logs',
-        help='Directory in which to store logs',
-    )
-    parser.add_argument(
-        '--new-readme',
-        type=str,
-        default='README-new.md',
-        help='Where to write the new README.md',
-    )
-    parser.add_argument(
-        'resfiles',
-        metavar='result-file',
-        type=str,
-        nargs='*',
-        help='Specific results files to accumulate',
-    )
-
-    return parser
-
-
-def create_logdir(logdir):
-    """Create the log directory, which can be relative to the root directory
-       or absolute"""
-    if not os.path.isabs(logdir):
-        logdir = os.path.join(gparam['rootdir'], logdir)
-
-    if not os.path.isdir(logdir):
-        try:
-            os.makedirs(logdir)
-        except PermissionError:
-            raise PermissionError(f'Unable to create log directory {logdir}')
-
-    if not os.access(logdir, os.W_OK):
-        raise PermissionError(f'Unable to write to log directory {logdir}')
-
-    return logdir
-
-
-def setup_logging(logdir, prefix):
-    """Set up logging in the directory specified by "logdir".
-
-       The log file name is the "prefix" argument followed by a timestamp.
-
-       Debug messages only go to file, everything else also goes to the
-       console."""
-
-    # Create the log directory first if necessary.
-    logdir_abs = create_logdir(logdir)
-    logfile = os.path.join(
-        logdir_abs, time.strftime(f'{prefix}-%Y-%m-%d-%H%M%S.log')
-    )
-
-    # Set up logging
-    log.setLevel(logging.DEBUG)
-    cons_h = logging.StreamHandler(sys.stdout)
-    cons_h.setLevel(logging.INFO)
-    log.addHandler(cons_h)
-    file_h = logging.FileHandler(logfile)
-    file_h.setLevel(logging.DEBUG)
-    log.addHandler(file_h)
-
-    # Log where the log file is
-    log.debug(f'Log file: {logfile}\n')
-    log.debug('')
-
-
-def log_args(args):
-    """Record all the argument values"""
-    log.debug('Supplied arguments')
-    log.debug('==================')
-
-    for arg in vars(args):
-        realarg = re.sub('_', '-', arg)
-        val = getattr(args, arg)
-        log.debug(f'--{realarg:20}: {val}')
-
-    log.debug('')
-
-
-def validate_resdir(args):
-    """Check the details of the results directory are OK and enumerate the
-       files."""
-
-    # Check the directory
-    if os.path.isabs(args.resdir):
-        gparam['resdir'] = args.resdir
-    else:
-        gparam['resdir'] = os.path.join(gparam['rootdir'], args.resdir)
-
-    if not os.path.isdir(gparam['resdir']):
-        log.error(f'ERROR: Results directory {gparam["resdir"]} not ' +
-                   f'found: exiting')
-        sys.exit(1)
-
-    if not os.access(gparam['resdir'], os.R_OK):
-        log.error(f'ERROR: Unable to read results directory ' +
-                   f'{gparam["resdir"]}: exiting')
-        sys.exit(1)
-
-    # Enumerate the files
-    gparam['resfiles'] = set()
-    if args.resfiles:
-        # Specific results files
-        for resf in args.resfiles:
-            abs_resf = os.path.join(gparam['resdir'], resf + '.json')
-            if os.access(abs_resf, os.R_OK):
-                gparam['resfiles'].add(resf)
-            else:
-                log.warning(f'Warning: Unable to find result file '+
-                             f'{resf}: ignored')
-    else:
-        # All results files
-        dirlist = os.listdir(gparam['resdir'])
-        for resf in dirlist:
-            rootf, suffix = os.path.splitext(resf)
-            abs_resf = os.path.join(gparam['resdir'], resf)
-            if (suffix == '.json' and os.path.isfile(abs_resf) and
-                    os.access(abs_resf, os.R_OK)):
-                gparam['resfiles'].add(rootf)
-
-    if not gparam['resfiles']:
-        log.error(f'ERROR: No results files found')
-        sys.exit(1)
-
-def validate_readme(args):
-    """Check the README files are OK."""
-
-    readme_old = os.path.join(gparam['rootdir'], 'README.md')
-
-    if os.path.isabs(args.new_readme):
-        readme_new = args.new_readme
-    else:
-        readme_new = os.path.join(gparam['rootdir'], args.new_readme)
-
-    if os.path.exists(readme_new) and os.path.samefile(readme_new, readme_old):
-        log.error(f'ERROR: New README file {readme_new} must differ from '
-                   f'existing file, {readme_old}')
-        sys.exit(1)
-
-    try:
-        gparam['readme_oldf'] = open(readme_old, 'r')
-    except OSError as osex:
-        log.error(f'ERROR: Could not open {readme_old} for reading: ' +
-                   f'{osex.strerror}')
-        sys.exit(1)
-
-    try:
-        gparam['readme_newf'] = open(readme_new, 'w')
-    except OSError as osex:
-        log.error(f'ERROR: Could not open {readme_new} for writing: ' +
-                   f'{osex.strerror}')
-        sys.exit(1)
-
-
-def validate_args(args):
-    """Check that supplied args are all valid. By definition logging is
-       working when we get here.
-
-       Update the gparam dictionary with all the useful info"""
-
-    # Validate the results directory
-    validate_resdir(args)
-
-    # Sort out the README file
-    validate_readme(args)
 
 
 def output_markdown_line(resdata):
@@ -343,25 +158,31 @@ def transcribe_results():
 
 
 def main():
-    """Main program to drive collating of benchmarks."""
-    # Establish the root directory of the repository, since we know this file is
-    # in that directory.
-    gparam['rootdir'] = os.path.abspath(os.path.dirname(__file__))
+    """
+    Main program to drive collating of benchmarks.
+    """
+    # Parse the arguments, set up logging and then validate the arguments
+    args = process.args.Args(os.path.abspath(os.path.dirname(__file__)))
+    log = process.logging.Logger(args.logdir(), 'process')
+    arglist = args.all_args(log)
+    args.log_raw(log)
+    args.log_cooked(log)
 
-    # Parse arguments using standard technology
-    parser = build_parser()
-    args = parser.parse_args()
+    # Get the data into a list
+    reslist = []
+    for resf in arglist['resfiles']:
+        record = process.data.Record(resf)
+        if record.valid_data():
+            reslist.append(record)
+        else:
+            # If there is a problem we run valid_data a second time to capture
+            # the detail in the log.
+            log.info(f'Warning: Invalid results file {resf}: ignored')
+            record.valid_data(log)
 
-    # Establish logging, using "build" as the log file prefix.
-    setup_logging(args.logdir, 'build')
-    log_args(args)
-
-    # Check args are OK (have to have logging directory set up first)
-    validate_args(args)
-
-    # Transcribe JSON into Markdown summary
-    transcribe_results()
-
+    # Create the new readme
+    readme = process.readme.Readme(arglist['readme_hdr'], arglist['readme'])
+    readme.write_table(arglist['readme'], 'Results sorted by name', reslist)
 
 # Make sure we have new enough python
 def check_python_version(major, minor):
