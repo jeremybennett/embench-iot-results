@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Module to handle logging as part of the process package
+# Module to handle logging as part of the embres package
 
 # Copyright (C) 2019 Embecosm Limited
 #
@@ -76,7 +76,7 @@ class Logger:
         self.__log.addHandler(file_h)
 
         # Log where the log file is
-        self.__log.debug(f'Log file: {logfile}\n')
+        self.__log.debug('Log file: %s\n', logfile)
         self.__log.debug('')
 
     def info(self, msg):

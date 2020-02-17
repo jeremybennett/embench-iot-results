@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Module to handle JSON Embench records as part of the process package
+# Module to handle JSON Embench records as part of the embres package
 
 # Copyright (C) 2019 Embecosm Limited
 #
@@ -33,7 +33,7 @@ class Result:
     A class to capture one set of results (geometric mean and standard
     deviation) and compute the range derived from this.
     """
-    def __init__(self, type, geomean, geosd):
+    def __init__(self, geomean, geosd):
         """
         Constructor sets the geometric mean and standard deviation.
         """
@@ -143,7 +143,6 @@ class Record:
 
             if 'size results' in json_data:
                 self.__results['Size'] = Result(
-                    'Size',
                     json_data['size results']['size geometric mean'],
                     json_data['size results']['size geometric standard deviation']
                 )
@@ -152,12 +151,10 @@ class Record:
 
             if 'speed results' in json_data:
                 self.__results['Speed'] = Result(
-                    'Speed',
                     json_data['speed results']['speed geometric mean'],
                     json_data['speed results']['speed geometric standard deviation']
                 )
                 self.__results['Speed/MHz'] = Result(
-                    'Speed/MHz',
                     self.__results['Speed'].geomean() / self.__cpu_mhz,
                     self.__results['Speed'].geosd()
                 )
@@ -165,7 +162,7 @@ class Record:
                 self.__results['Speed'] = None
                 self.__results['Speed/MHz'] = None
 
-    def valid_data(self, log = None):
+    def valid_data(self, log=None):
         """
         Determine if the supplied data is valid, logging any omissions if a
         log file is provided.
@@ -185,10 +182,10 @@ class Record:
         }
 
         res = True
-        for f in fields:
-            if not f in json_data:
+        for field in fields:
+            if not field in json_data:
                 if log:
-                    log.debug (f'Missing JSON field {f}')
+                    log.debug(f'Missing JSON field {field}')
                 res = False
 
         if not res:
@@ -216,10 +213,10 @@ class Record:
         pinfo = json_data['platform information']
 
         res = True
-        for pf in pfields:
-            if not pf in pinfo:
+        for pfield in pfields:
+            if not pfield in pinfo:
                 if log:
-                    log.debug(f'Missing JSON plaform info {pf}')
+                    log.debug(f'Missing JSON plaform info {pfield}')
                 res = False
 
         return res

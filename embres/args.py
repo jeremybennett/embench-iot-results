@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Module to handle arguments as part of the process package
+# Module to handle arguments as part of the embres package
 
 # Copyright (C) 2019 Embecosm Limited
 #
@@ -108,7 +108,7 @@ class Args:
         resdir = self.__args.resdir
         if resdir:
             if not os.path.isabs(resdir):
-                resdir  = os.path.join(self.__rootdir, resdir)
+                resdir = os.path.join(self.__rootdir, resdir)
 
             # Directory exists and is writable?
             if not os.path.isdir(resdir):
@@ -179,10 +179,10 @@ class Args:
             # this case.
             dirlist = sorted(os.listdir(self.__cooked['resdir']))
             for resf in dirlist:
-                rootf, suffix = os.path.splitext(resf)
+                _, suffix = os.path.splitext(resf)
                 resf = os.path.join(self.__cooked['resdir'], resf)
                 if (suffix == '.json' and os.path.isfile(resf) and
-                    os.access(resf, os.R_OK)):
+                        os.access(resf, os.R_OK)):
                     self.__cooked['resfiles'].append(resf)
 
         if not self.__cooked['resfiles']:
@@ -240,3 +240,10 @@ class Args:
             log.debug('  ' + resf)
 
         log.debug('')
+
+    def log(self, log):
+        """
+        Convenience method to log both raw and cooked args
+        """
+        self.log_raw(log)
+        self.log_cooked(log)
