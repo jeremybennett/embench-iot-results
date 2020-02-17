@@ -37,7 +37,7 @@ class Readme:
         # Header is all fixed.
         self.__readme.writelines('{| class="wikitable sortable"\n')
         self.__readme.writelines('! align="left"  | Architecture\n')
-        self.__readme.writelines('! align="left"  | Benchmark name\n')
+        self.__readme.writelines('! align="left"  | Benchmark description\n')
         self.__readme.writelines('! align="right" | MHz\n')
         self.__readme.writelines('! align="left"  | Type\n')
         self.__readme.writelines('! align="right" | Score\n')
@@ -51,7 +51,7 @@ class Readme:
         # Put out the lines
         self.__readme.writelines(f'|- align="left"\n')
         self.__readme.writelines(f'|  rowspan="3" | {res.arch()}\n')
-        self.__readme.writelines(f'|  rowspan="3" | {res.name()}\n')
+        self.__readme.writelines(f'|  rowspan="3" | {res.desc()}\n')
         self.__readme.writelines(f'|  align="right" rowspan="3" | '
                                  f'{res.cpu_mhz()}\n')
 
@@ -73,8 +73,8 @@ class Readme:
         """
         Private method to write out the standard wiki footer.
         """
-        # Footer followed by a blank line.
-        self.__readme.writelines('|}\n\n')
+        # Footer
+        self.__readme.writelines('|}\n')
 
     def write_header(self):
         """
@@ -86,10 +86,10 @@ class Readme:
     def write_table(self, title, reslist):
         """
         Given a list of results generate them as a mediawiki table, preceded
-        by the supplied level 2 title
+        by the supplied level 3 title
         """
-        # The title, followed by a blank line
-        self.__readme.writelines(f'== {title} ==\n\n')
+        # The title, preceded and followed by a blank line
+        self.__readme.writelines(f'\n=== {title} ===\n\n')
 
         # The wiki table header
         self.__wiki_tblhdr()

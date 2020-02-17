@@ -50,7 +50,60 @@ def main():
     # Create the new readme
     readme = embres.Readme(arglist['readme_hdr'], arglist['readme'])
     readme.write_header()
-    readme.write_table('Results sorted by name', reslist)
+
+    # Results sorted by speed (large is good)
+    reslist_sorted = sorted(
+        reslist, key=lambda rec: rec.results()['Speed'].geomean(), reverse=True
+    )
+    readme.write_table('Results sorted by Embench speed score', reslist_sorted)
+
+    # Results sorted by speed/MHz (large is good)
+    reslist_sorted = sorted(
+        reslist,
+        key=lambda rec: rec.results()['Speed/MHz'].geomean(),
+        reverse=True
+    )
+    readme.write_table(
+        'Results sorted by Embench speed score/MHz', reslist_sorted
+    )
+
+    # Results sorted by size (small is good)
+    reslist_sorted = sorted(
+        reslist, key=lambda rec: rec.results()['Size'].geomean()
+    )
+    readme.write_table('Results sorted by Embench size score', reslist_sorted)
+
+    # Per architecture results sorted by speed (large is good)
+    reslist_sorted = sorted(
+        reslist, key=lambda rec: rec.arch()
+    )
+    reslist_sorted2 = sorted(
+        reslist_sorted,
+        key=lambda rec: rec.results()['Speed'].geomean(),
+        reverse=True
+    )
+    readme.write_table(
+        'Per architecture results sorted by Embench speed score', reslist_sorted2
+    )
+
+    # Results sorted by speed/MHz (large is good)
+    reslist_sorted2 = sorted(
+        reslist_sorted,
+        key=lambda rec: rec.results()['Speed/MHz'].geomean(),
+        reverse=True
+    )
+    readme.write_table(
+        'Per architecture results sorted by Embench speed score/MHz',
+        reslist_sorted2
+    )
+
+    # Results sorted by size (small is good)
+    reslist_sorted2 = sorted(
+        reslist_sorted, key=lambda rec: rec.results()['Size'].geomean()
+    )
+    readme.write_table(
+        'Per achitecture results sorted by Embench size score', reslist_sorted2
+    )
 
 
 # Make sure we have new enough python

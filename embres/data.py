@@ -14,14 +14,15 @@
 
 We have three main classes
 
-- Record: The high level details of architecture, Embench version, Name of the
-  benchmark, Result for each category (size, speed, speed/MHz) and reference
-  to DetailedRecord.
+- Record: The high level details of architecture, Embench version, descrption
+  of the benchmark, Result for each category (size, speed, speed/MHz) and
+  reference to DetailedRecord.
 
 - Result: A record of geometric mean, geometric standard deviation, and
 - derived from these low and high ranges (+/- one SD).
 
 - DetailedRecord: All the data from the JSON file.
+
 """
 
 from json import loads
@@ -91,12 +92,12 @@ class DetailedRecord:
                 self.__err_colno = jex.colno
                 self.__err_msg = jex.msg
 
-    def name(self):
+    def desc(self):
         """
-        Return the name. Only valid if we actually have data.
+        Return the description. Only valid if we actually have data.
         """
         assert self.json_data, "No valid JSON data"
-        return self.__json_data['name']
+        return self.__json_data['desc']
 
     def json_data(self):
         """
@@ -131,7 +132,7 @@ class Record:
         if self.valid_data():
             json_data = self.__detailed_record.json_data()
 
-            self.__name = json_data['name']
+            self.__desc = json_data['description']
             self.__arch = json_data['architecture family']
             self.__embench_version = json_data['Embench version']
 
@@ -177,7 +178,7 @@ class Record:
 
         # Must have key fields
         fields = {
-            'name', 'architecture family', 'Embench version',
+            'description', 'architecture family', 'Embench version',
             'platform information',
         }
 
@@ -221,11 +222,11 @@ class Record:
 
         return res
 
-    def name(self):
+    def desc(self):
         """
-        Accessor for the test name.
+        Accessor for the test desc.
         """
-        return self.__name
+        return self.__desc
 
     def arch(self):
         """

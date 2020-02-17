@@ -1,4 +1,4 @@
-{ "name" : "RI5CY RV32E GCC 10.0.0 18-Nov-19 -Os -msave-restore",
+{ "description" : "RI5CY RV32E GCC 10.0.0 18-Nov-19 -Os -msave-restore",
   "architecture family" : "RV32",
   "Embench version" : "0.5",
   "platform information" :

@@ -1,4 +1,4 @@
-{ "name" : "RI5CY RV32IMC GCC 10.0.0 18-Nov-19 -O2",
+{ "description" : "RI5CY RV32IMC GCC 10.0.0 18-Nov-19 -O2",
   "architecture family" : "RV32",
   "Embench version" : "0.5",
   "architecture family" : "RV32",
