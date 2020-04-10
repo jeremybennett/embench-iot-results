@@ -2,7 +2,7 @@
 
 # Module to handle JSON Embench records as part of the embres package
 
-# Copyright (C) 2019 Embecosm Limited
+# Copyright (C) 2019, 2020 Embecosm Limited
 #
 # Contributor: Jeremy Bennett <jeremy.bennett@embecosm.com>
 #
@@ -142,18 +142,21 @@ class Record:
             # Collect data
             self.__results = dict()
 
-            if 'size results' in json_data:
+
+            if 'relative size results' in json_data:
+                size_data = json_data['relative size results']
                 self.__results['Size'] = Result(
-                    json_data['size results']['size geometric mean'],
-                    json_data['size results']['size geometric standard deviation']
+                    size_data['geometric mean'],
+                    size_data['geometric standard deviation']
                 )
             else:
                 self.__results['Size'] = None
 
-            if 'speed results' in json_data:
+            if 'relative speed results' in json_data:
+                speed_data = json_data['relative speed results']
                 self.__results['Speed'] = Result(
-                    json_data['speed results']['speed geometric mean'],
-                    json_data['speed results']['speed geometric standard deviation']
+                    speed_data['geometric mean'],
+                    speed_data['geometric standard deviation']
                 )
                 self.__results['Speed/MHz'] = Result(
                     self.__results['Speed'].geomean() / self.__cpu_mhz,

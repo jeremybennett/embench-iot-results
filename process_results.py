@@ -106,21 +106,7 @@ def main():
     )
 
 
-# Make sure we have new enough python
-def check_python_version(major, minor):
-    """
-    Check the python version is at least {major}.{minor}.
-
-    Note. We can't use the log yet - it isn't created!
-    """
-    if ((sys.version_info[0] < major)
-            or ((sys.version_info[0] == major)
-                and (sys.version_info[1] < minor))):
-        print(f'ERROR: Requires Python {major}.{minor} or later')
-        sys.exit(1)
-
-
 # Make sure we have new enough Python and only run if this is the main package
-check_python_version(3, 6)
+embres.check_python_version(3, 6)
 if __name__ == '__main__':
     sys.exit(main())

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# Initialization of the process module
+# Initialization of the embres package
 
-# Copyright (C) 2019 Embecosm Limited
+# Copyright (C) 2020 Embecosm Limited
 #
 # Contributor: Jeremy Bennett <jeremy.bennett@embecosm.com>
 #
@@ -19,3 +19,4 @@ from embres.args import Args
 from embres.data import Record
 from embres.logger import Logger
 from embres.readme import Readme
+from embres.utils import check_python_version

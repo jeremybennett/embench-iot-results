@@ -2,7 +2,7 @@
 
 # Module to handle logging as part of the embres package
 
-# Copyright (C) 2019 Embecosm Limited
+# Copyright (C) 2019, 2020 Embecosm Limited
 #
 # Contributor: Jeremy Bennett <jeremy.bennett@embecosm.com>
 #
