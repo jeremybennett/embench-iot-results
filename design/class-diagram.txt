@@ -1,0 +1,120 @@
+/' PlantUML class diagram for process-results.
+
+   Copyright (C) 2020 Embecosm Limited
+
+   Contributor: Jeremy Bennett <jeremy.bennett@embecosm.com>
+
+   This file is part of Embench.
+
+   SPDX-License-Identifier: GPL-3.0-or-later '/
+
+/' Recreate the SVG using:
+
+     plantuml -tsvg class-diagram.txt
+
+   or just 'make' '/
+
+@startuml
+
+title Class Diagram for process-results
+
+class Args {
+  -__rootdir
+  -__args
+  -__cooked
+  -__init__()
+  -__detailsdir()
+  -__resfiles()
+  +all_ags()
+  +log_raw()
+  +log_cooked()
+  +log()
+  +logdir()
+}
+
+class Result {
+  -__geomean
+  -__geosd
+  -__init__()
+  +geomean()
+  +geosd()
+  +range_lo()
+  +range_hi()
+}
+
+class DetailedRecord {
+  -__resfile
+  -__json_data[]
+  -__err_lineno
+  -__err_colno
+  -__err_msg
+  -__init__()
+  +desc()
+  +json_data()
+  +errmsg()
+}
+
+class Record {
+  -__detailed_record
+  -__details_wikipage
+  -__desc
+  -__arch
+  -__embench_version
+  -__cpu_mhz
+  -__results[]
+  -__init__()
+  +valid_data()
+  +write_details()
+  +details_wikipage()
+  +desc()
+  +arch()
+  +embench_version()
+  +cpu_mhz()
+  +results()
+  +details()
+}
+
+class Logger {
+  -__log
+  -__init__()
+  +info()
+  +debug()
+  +warning()
+  +error()
+}
+
+class Readme {
+  -__readme_hdr
+  -__readme
+  -__details_dir
+  -__init__()
+  -__wiki_tblhdr()
+  -__wiki_tblrow()
+  -__wiki_tblftr()
+  +write_header()
+  +write_table()
+}
+
+class Details {
+  -__filename
+  -__fileh
+  -__init__()
+  -__open()
+  +write_results()
+}
+
+class main
+
+main -- Args : fetch parsed args >
+main -- Logger : create logger >
+main o-- Record : fetch analysed results >
+main o-- Details : create detail pages >
+main -- Readme : create main page >
+(main, Readme) .. Record
+
+Details -- Record : uses description >
+
+Record -- DetailedRecord : create from JSON data >
+Record *-- Result : create Embench score >
+
+@enduml
