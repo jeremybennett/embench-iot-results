@@ -51,6 +51,12 @@ class Args:
             help='Directory holding the results files',
         )
         parser.add_argument(
+            '--detailsdir',
+            type=str,
+            default='details',
+            help='Directory holding the detail of results wikified'
+        )
+        parser.add_argument(
             '--logdir',
             type=str,
             default='logs',
@@ -71,6 +77,7 @@ class Args:
         self.__cooked = dict()
         self.__cooked['logdir'] = None
         self.__cooked['resdir'] = None
+        self.__cooked['detailsdir'] = None
         self.__cooked['readme_hdr'] = None
         self.__cooked['readme'] = None
         self.__cooked['resfiles'] = []
@@ -124,6 +131,41 @@ class Args:
             resdir = self.__rootdir
 
         self.__cooked['resdir'] = resdir
+
+    def __detailsdir(self, log):
+        """
+        Private method to sort out the details directory, which we create if it
+        does not exist.  This *must* be relative to the root directory.  We
+        should end up with a directory that is writable.
+        """
+        detailsdir = self.__args.detailsdir
+        if os.path.isabs(detailsdir):
+            log.error(
+                f'ERROR: Details directory {detailsdir} cannot be '
+                f'absolute: exiting'
+            )
+            sys.exit(1)
+        else:
+            absdetailsdir = os.path.join(self.__rootdir, detailsdir)
+
+        # Create the directory if needed and check it is writable.
+        if not os.path.isdir(detailsdir):
+            try:
+                os.makedirs(absdetailsdir)
+            except PermissionError:
+                log.error(
+                    f'ERROR: Unable to create details directory ' +
+                    f'{detailsdir}: exiting')
+                sys.exit(1)
+
+        if not os.access(absdetailsdir, os.R_OK):
+            log.error(f'ERROR: Unable to read details directory ' +
+                      f'{detailsdir}: exiting')
+            sys.exit(1)
+
+        # Need the name both absolute and relative.
+        self.__cooked['absdetailsdir'] = absdetailsdir
+        self.__cooked['detailsdir'] = detailsdir
 
     def __readme(self, log):
         """
@@ -198,9 +240,11 @@ class Args:
         be called multiple times - after the first time, it will just return
         the result from the first call.
         """
-        # Results directory
+        # Results and details directories
         if not self.__cooked['resdir']:
             self.__resdir(log)
+        if not self.__cooked['detailsdir']:
+            self.__detailsdir(log)
 
         # New and old readme files as needed. Note that these are file handles.
         if not (self.__cooked['readme_hdr'] and self.__cooked['readme']):

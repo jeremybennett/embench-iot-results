@@ -38,8 +38,13 @@ def main():
     # Get the data into a list
     reslist = []
     for resf in arglist['resfiles']:
-        record = embres.Record(resf)
+        details_wikipage = embres.abs_json_to_wiki(resf)
+        record = embres.Record(resf, details_wikipage)
         if record.valid_data():
+            details = embres.Details(
+                arglist['absdetailsdir'], details_wikipage
+            )
+            record.write_details(details)
             reslist.append(record)
         else:
             # If there is a problem we run valid_data a second time to capture
@@ -48,7 +53,9 @@ def main():
             record.valid_data(log)
 
     # Create the new readme
-    readme = embres.Readme(arglist['readme_hdr'], arglist['readme'])
+    readme = embres.Readme(
+        arglist['readme_hdr'], arglist['readme'], arglist['detailsdir']
+    )
     readme.write_header()
 
     # Results sorted by speed (large is good)

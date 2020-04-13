@@ -19,4 +19,6 @@ from embres.args import Args
 from embres.data import Record
 from embres.logger import Logger
 from embres.readme import Readme
+from embres.readme import Details
 from embres.utils import check_python_version
+from embres.utils import abs_json_to_wiki

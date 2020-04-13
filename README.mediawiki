@@ -33,7 +33,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -60,7 +60,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -87,7 +87,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -114,7 +114,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -141,7 +141,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -168,7 +168,7 @@ deviation above.
 ! align="center" | Range
 |- align="left"
 |  rowspan="3" | RV32
-|  rowspan="3" | RI5CY RV32IMC GCC 9.2 -O2
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05

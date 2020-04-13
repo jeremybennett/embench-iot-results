@@ -121,12 +121,14 @@ class Record:
     DetailedRecord, but potentially supplemented by a link to a page with
     details of the actual run.
     """
-    def __init__(self, resfile):
+    def __init__(self, resfile, details_wikipage):
         """
         Initialize from a JSON file. Throw an exception if the data is not
-        valid.
+        valid.  The second argument is the name of the Wiki page that will
+        hold all the details.
         """
         self.__detailed_record = DetailedRecord(resfile)
+        self.__details_wikipage = details_wikipage
 
         # Set up useful fields if we have them
         if self.valid_data():
@@ -224,6 +226,19 @@ class Record:
                 res = False
 
         return res
+
+    def write_details(self, details):
+        """
+        Write out a details file, as described in the supplied details
+        instance of the Details class.
+        """
+        details.write_results(self)
+
+    def details_wikipage(self):
+        """
+        Accessor for the details wikipage.
+        """
+        return self.__details_wikipage
 
     def desc(self):
         """
