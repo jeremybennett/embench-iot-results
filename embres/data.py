@@ -103,6 +103,16 @@ class ResultDetails:
         """
         return self.__json_data
 
+    def json_data_copy(self):
+        """
+        Return a copy of the JSON data, which can be safely manipulated
+        without destroying the original. None if there is no data.
+        """
+        if self.__json_data:
+            return self.__json_data.copy()
+
+        return None
+
     def details_page(self):
         """
         Return the name of the wikipage which will hold the details.

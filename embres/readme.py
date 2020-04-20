@@ -94,17 +94,116 @@ class Readme:
         for line in self.__readme_hdr:
             self.__readme.writelines(line)
 
+    @staticmethod
+    def __write_general_details(fileh, json_data):
+        """
+        Static method to write out general detail fields.
+
+        Will raise KeyError if the description field is missing
+        """
+        # Page title is the description
+        desc = json_data.pop('description')
+        fileh.writelines(f'== {desc} ==\n\n')
+
+        # Table for the info
+        fileh.writelines('{| class="wikitable sortable"\n')
+
+        fields = ['Embench version', 'architecture family', 'date/time',]
+        for field in fields:
+            val = json_data.pop(field, '')
+            fileh.writelines(f'|- align="left"\n')
+            fileh.writelines(f'| {field} || {val}\n')
+
+        fileh.writelines('|}\n\n')
+
+    @staticmethod
+    def __write_platform_info(fileh, json_data):
+        """
+        Static method to write out platform information fields.
+
+        Will raise KeyError if the platform information field is missing
+        """
+        # Section title is the description
+        pinfo = json_data.pop('platform information')
+        fileh.writelines('== Platform information ==\n\n')
+
+        # Table for the info
+        fileh.writelines('{| class="wikitable sortable"\n')
+
+        for field, val in pinfo.items():
+            fileh.writelines(f'|- align="left"\n')
+            fileh.writelines(f'| {field} || {val}\n')
+
+        fileh.writelines('|}\n\n')
+
+    @staticmethod
+    def __write_tool_chain_info(fileh, json_data):
+        """
+        Static method to write out tool chain info fields.
+
+        Will raise KeyError if the tool chain information, tool chain version
+        or tool chain flag fields are missing
+        """
+        # Main section title
+        tcinfo = json_data.pop('tool chain information')
+        fileh.writelines('== Tool chain information ==\n\n')
+
+        # Section for tool chain version
+        tcvinfo = tcinfo.pop('tool chain version')
+        fileh.writelines('=== Tool chain versions ===\n\n')
+
+        # Table for the tool chain version info
+        fileh.writelines('{| class="wikitable sortable"\n')
+
+        for field, val in tcvinfo.items():
+            fileh.writelines(f'|- align="left"\n')
+            fileh.writelines(f'| {field} || {val}\n')
+
+        fileh.writelines('|}\n\n')
+
+        # Section for tool chain flags
+        tcfinfo = tcinfo.pop('tool chain flags')
+        fileh.writelines('=== Tool chain flags used in benchmarking ===\n\n')
+
+        # Table for the tool chain flags info
+        fileh.writelines('{| class="wikitable sortable"\n')
+
+        for field, val in tcfinfo.items():
+            fileh.writelines(f'|- align="left"\n')
+            fileh.writelines(f'| {field} || {val}\n')
+
+        fileh.writelines('|}\n\n')
+
+        # Section for any other tool chain info
+        if tcinfo:
+            fileh.writelines('=== Other tool chain information ===\n\n')
+
+            # Table for the other tool chain info
+            fileh.writelines('{| class="wikitable sortable"\n')
+
+            for field, val in tcinfo.items():
+                fileh.writelines(f'|- align="left"\n')
+                fileh.writelines(f'| {field} || {val}\n')
+
+            fileh.writelines('|}\n\n')
+
     def __write_details(self, details):
         """
         Write out a file with all the details for a set of results.
 
-        Raises OSError if there is a problem opening the file
+        Raises OSError if there is a problem opening the file. We work with a
+        copy of the details, from which we delete elements as they are
+        printed. This allows us to print any remaining general information at
+        the end, thus allowing arbitary information to be recorded.
         """
         fileh = open(
             os.path.join(self.__absdetailsdir, details.details_page()), 'w'
         )
-
-        fileh.writelines(f'== {details.desc()} ==\n')
+        json_data = details.json_data_copy()
+        self.__write_general_details(fileh, json_data)
+        self.__write_platform_info(fileh, json_data)
+        self.__write_tool_chain_info(fileh, json_data)
+        fileh.close()
 
     def write_all_details(self, result_set):
         """
