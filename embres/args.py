@@ -71,66 +71,79 @@ class Args:
         )
 
         # Parse the command line
-        self.__args = parser.parse_args()
+        self.__raw = parser.parse_args()
 
         # Mark all private copies as empty for now.
         self.__cooked = dict()
-        self.__cooked['logdir'] = None
-        self.__cooked['resdir'] = None
+        self.__cooked['abslogdir'] = None
+        self.__cooked['absresdir'] = None
         self.__cooked['detailsdir'] = None
         self.__cooked['readme_hdr'] = None
         self.__cooked['readme'] = None
         self.__cooked['resfiles'] = []
 
-    def logdir(self):
+    def abslogdir(self):
         """
         Extract the log directory, create it if necessary and make sure it is
         writable. This means dealing with relative v absolute directory
         names. Any errors here are going to go straight to the console as
         exceptions.
         """
-        # Sort out absolutism
-        logdir = self.__args.logdir
-        if not os.path.isabs(logdir):
-            logdir = os.path.join(self.__rootdir, logdir)
+        # Cache the result
+        if not self.__cooked['abslogdir']:
+            # Sort out absolutism
+            logdir = self.__raw.logdir
+            if os.path.isabs(logdir):
+                abslogdir = logdir
+            else:
+                abslogdir = os.path.join(self.__rootdir, logdir)
 
-        # Create the directory if necessary and maks sure we can write it.
-        if not os.path.isdir(logdir):
-            try:
-                os.makedirs(logdir)
-            except PermissionError:
-                raise PermissionError(f'Unable to create log directory {logdir}')
+            # Create the directory if necessary and make sure we can write it.
+            if not os.path.isdir(abslogdir):
+                try:
+                    os.makedirs(abslogdir)
+                except PermissionError:
+                    raise PermissionError(
+                        f'Unable to create log directory {logdir}'
+                    )
 
-        if not os.access(logdir, os.W_OK):
-            raise PermissionError(f'Unable to write to log directory {logdir}')
+            if not os.access(abslogdir, os.W_OK):
+                raise PermissionError(
+                    f'Unable to write to log directory {logdir}'
+                )
 
-        self.__cooked['logdir'] = logdir
-        return logdir
+            self.__cooked['abslogdir'] = abslogdir
 
-    def __resdir(self, log):
+        return self.__cooked['abslogdir']
+
+    def __absresdir(self, log):
         """
         Private method to sort out the results directory, which should end up
-        as an (existing) absolute directory that is writable.
+        as an (existing) absolute directory that is readable.
         """
-        resdir = self.__args.resdir
-        if resdir:
-            if not os.path.isabs(resdir):
-                resdir = os.path.join(self.__rootdir, resdir)
+        # Cache the result
+        if not self.__cooked['absresdir']:
+            resdir = self.__raw.resdir
+            if resdir:
+                if os.path.isabs(resdir):
+                    absresdir = resdir
+                else:
+                    absresdir = os.path.join(self.__rootdir, resdir)
+            else:
+                absresdir = self.__rootdir
 
-            # Directory exists and is writable?
-            if not os.path.isdir(resdir):
+            # Directory exists and is readable?
+            if not os.path.isdir(absresdir):
                 log.error(f'ERROR: Results directory {resdir} not ' +
                           f'found: exiting')
                 sys.exit(1)
 
-            if not os.access(resdir, os.R_OK):
+            if not os.access(absresdir, os.R_OK):
                 log.error(f'ERROR: Unable to read results directory ' +
                           f'{resdir}: exiting')
                 sys.exit(1)
-        else:
-            resdir = self.__rootdir
 
-        self.__cooked['resdir'] = resdir
+            self.__cooked['absresdir'] = absresdir
 
     def __detailsdir(self, log):
         """
@@ -138,34 +151,37 @@ class Args:
         does not exist.  This *must* be relative to the root directory.  We
         should end up with a directory that is writable.
         """
-        detailsdir = self.__args.detailsdir
-        if os.path.isabs(detailsdir):
-            log.error(
-                f'ERROR: Details directory {detailsdir} cannot be '
-                f'absolute: exiting'
-            )
-            sys.exit(1)
-        else:
-            absdetailsdir = os.path.join(self.__rootdir, detailsdir)
-
-        # Create the directory if needed and check it is writable.
-        if not os.path.isdir(detailsdir):
-            try:
-                os.makedirs(absdetailsdir)
-            except PermissionError:
+        # Cache the result
+        if not self.__cooked['detailsdir']:
+            detailsdir = self.__raw.detailsdir
+            if os.path.isabs(detailsdir):
                 log.error(
-                    f'ERROR: Unable to create details directory ' +
-                    f'{detailsdir}: exiting')
+                    f'ERROR: Details directory {detailsdir} cannot be '
+                    f'absolute: exiting'
+                )
                 sys.exit(1)
 
-        if not os.access(absdetailsdir, os.R_OK):
-            log.error(f'ERROR: Unable to read details directory ' +
-                      f'{detailsdir}: exiting')
-            sys.exit(1)
+            # Absolute directory
+            absdetailsdir = os.path.join(self.__rootdir, detailsdir)
 
-        # Need the name both absolute and relative.
-        self.__cooked['absdetailsdir'] = absdetailsdir
-        self.__cooked['detailsdir'] = detailsdir
+            # Create the directory if needed and check it is writable.
+            if not os.path.isdir(absdetailsdir):
+                try:
+                    os.makedirs(absdetailsdir)
+                except PermissionError:
+                    log.error(
+                        f'ERROR: Unable to create details directory ' +
+                        f'{detailsdir}: exiting')
+                    sys.exit(1)
+
+            if not os.access(absdetailsdir, os.W_OK):
+                log.error(f'ERROR: Unable to write details directory ' +
+                          f'{detailsdir}: exiting')
+                sys.exit(1)
+
+            # Need the name both absolute and relative.
+            self.__cooked['absdetailsdir'] = absdetailsdir
+            self.__cooked['detailsdir'] = detailsdir
 
     def __readme(self, log):
         """
@@ -174,62 +190,41 @@ class Args:
         The README header is opened for reading and the new README  opened for
         writing.
         """
-        readme_hdr = os.path.join(self.__rootdir, 'README-header.mediawiki')
-        readme = os.path.join(self.__rootdir, 'README.mediawiki')
+        # Cache the result
+        if not (self.__cooked['readme_hdr'] and self.__cooked['readme']):
+            readme_hdr = os.path.join(self.__rootdir, 'README-header.mediawiki')
+            readme = os.path.join(self.__rootdir, 'README.mediawiki')
 
-        # Try to open the README header for reading, if it is not already opened.
-        if not self.__cooked['readme_hdr']:
-            # Old readme should exist.
-            try:
-                self.__cooked['readme_hdr'] = open(readme_hdr, 'r')
-            except OSError as osex:
-                log.error(f'ERROR: Could not open {readme_hdr} for reading: ' +
-                          f'{osex.strerror}')
-                sys.exit(1)
+            # Try to open the README header for reading, if it is not already
+            # opened.
+            if not self.__cooked['readme_hdr']:
+                # Old readme should exist.
+                try:
+                    self.__cooked['readme_hdr'] = open(readme_hdr, 'r')
+                except OSError as osex:
+                    log.error(f'ERROR: Could not open {readme_hdr} for ' +
+                              f'reading: {osex.strerror}')
+                    sys.exit(1)
 
-        # Try to open the new README for writing, if it is not already opened.
-        if not self.__cooked['readme']:
-            try:
-                self.__cooked['readme'] = open(readme, 'w')
-            except OSError as osex:
-                log.error(f'ERROR: Could not open {readme} for writing: ' +
-                          f'{osex.strerror}')
-                sys.exit(1)
+            # Try to open the new README for writing, if it is not already
+            # opened.
+            if not self.__cooked['readme']:
+                try:
+                    self.__cooked['readme'] = open(readme, 'w')
+                except OSError as osex:
+                    log.error(f'ERROR: Could not open {readme} for writing: ' +
+                              f'{osex.strerror}')
+                    sys.exit(1)
 
-    def __resfiles(self, log):
+    def __resfiles(self):
         """
-        Collate the results files as a list of absolute file names. The list
-        is either the files on the command line, or all the JSON files in the
-        results directory.
+        Collate the results files as a list of absolute file names on the
+        command line.
         """
-        # Enumerate the files
-        self.__cooked['resfiles'] = []
-
-        resfiles = self.__args.resfiles
-        if resfiles:
-            # Specific results files from the command line
-            for resf in resfiles:
-                if not os.path.isabs(resf):
-                    resf = os.path.join(self.__cooked['resdir'], resf)
-                    if os.access(resf, os.R_OK):
-                        self.__cooked['resfiles'].append(resf)
-                    else:
-                        log.warning(f'Warning: Unable to find result file '
-                                    f'{resf}: ignored')
-        else:
-            # All results files - we sort to put them in alphabetica order in
-            # this case.
-            dirlist = sorted(os.listdir(self.__cooked['resdir']))
-            for resf in dirlist:
-                _, suffix = os.path.splitext(resf)
-                resf = os.path.join(self.__cooked['resdir'], resf)
-                if (suffix == '.json' and os.path.isfile(resf) and
-                        os.access(resf, os.R_OK)):
-                    self.__cooked['resfiles'].append(resf)
-
+        # Cache the result
         if not self.__cooked['resfiles']:
-            log.error(f'ERROR: No results files found')
-            sys.exit(1)
+            # Enumerate the files
+            self.__cooked['resfiles'] = self.__raw.resfiles
 
     def all_args(self, log):
         """
@@ -241,43 +236,39 @@ class Args:
         the result from the first call.
         """
         # Results and details directories
-        if not self.__cooked['resdir']:
-            self.__resdir(log)
-        if not self.__cooked['detailsdir']:
-            self.__detailsdir(log)
+        self.__absresdir(log)
+        self.__detailsdir(log)
 
         # New and old readme files as needed. Note that these are file handles.
-        if not (self.__cooked['readme_hdr'] and self.__cooked['readme']):
-            self.__readme(log)
+        self.__readme(log)
 
         # Collate all the files to be processed.
-        if not self.__cooked['resfiles']:
-            self.__resfiles(log)
+        self.__resfiles()
 
         return self.__cooked
 
-    def log_raw(self, log):
+    def __log_raw(self, log):
         """
         Record the raw argument values
         """
         log.debug('Supplied raw arguments')
         log.debug('======================')
 
-        for arg in vars(self.__args):
+        for arg in vars(self.__raw):
             realarg = re.sub('_', '-', arg)
-            val = getattr(self.__args, arg)
+            val = getattr(self.__raw, arg)
             log.debug(f'--{realarg:20}: {val}')
 
         log.debug('')
 
-    def log_cooked(self, log):
+    def __log_cooked(self, log):
         """
         Record the cooked argument values. No point in printing file handles!
         """
         log.debug('Supplied cooked arguments')
         log.debug('=========================')
 
-        log.debug('Results directory: ' + self.__cooked['resdir'])
+        log.debug('Results directory: ' + self.__cooked['absresdir'])
 
         log.debug('Results files to process:')
         for resf in self.__cooked['resfiles']:
@@ -285,9 +276,9 @@ class Args:
 
         log.debug('')
 
-    def log(self, log):
+    def log_args(self, log):
         """
         Convenience method to log both raw and cooked args
         """
-        self.log_raw(log)
-        self.log_cooked(log)
+        self.__log_raw(log)
+        self.__log_cooked(log)

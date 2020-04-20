@@ -20,19 +20,21 @@ title Class Diagram for process-results
 
 class Args {
   -__rootdir
-  -__args
-  -__cooked
+  -__raw[]
+  -__cooked[]
   -__init__()
+  -__absresdir()
   -__detailsdir()
+  -__readme()
   -__resfiles()
+  -__log_raw()
+  -__log_cooked()
+  +abslogdir()
   +all_ags()
-  +log_raw()
-  +log_cooked()
-  +log()
-  +logdir()
+  +log_args()
 }
 
-class Result {
+class Score {
   -__geomean
   -__geosd
   -__init__()
@@ -42,36 +44,42 @@ class Result {
   +range_hi()
 }
 
-class DetailedRecord {
+class ResultDetails {
   -__resfile
   -__json_data[]
-  -__err_lineno
-  -__err_colno
-  -__err_msg
   -__init__()
   +desc()
   +json_data()
-  +errmsg()
+  +details_page()
 }
 
-class Record {
-  -__detailed_record
-  -__details_wikipage
-  -__desc
-  -__arch
-  -__embench_version
-  -__cpu_mhz
-  -__results[]
+class InvalidResultError {
+  +missing_fields
+  +missing_platform_fields
   -__init__()
-  +valid_data()
+}
+
+class Result {
+  -__result_details
+  -__scores[]
+  -__init__()
+  -__validate_data()
   +write_details()
   +details_wikipage()
   +desc()
   +arch()
   +embench_version()
   +cpu_mhz()
-  +results()
   +details()
+  +details_page()
+}
+
+class ResultSet {
+  -__results[]
+  -__init()__
+  -__collate_file()
+  -sort()
+  -results()
 }
 
 class Logger {
@@ -86,35 +94,29 @@ class Logger {
 class Readme {
   -__readme_hdr
   -__readme
-  -__details_dir
+  -__absdetailsdir
+  -__detailsdir
   -__init__()
   -__wiki_tblhdr()
   -__wiki_tblrow()
   -__wiki_tblftr()
+  +__write_details()
   +write_header()
+  +write_all_details()
   +write_table()
-}
-
-class Details {
-  -__filename
-  -__fileh
-  -__init__()
-  -__open()
-  +write_results()
 }
 
 class main
 
 main -- Args : fetch parsed args >
 main -- Logger : create logger >
-main o-- Record : fetch analysed results >
-main o-- Details : create detail pages >
+main -- ResultSet : fetch analysed results >
 main -- Readme : create main page >
-(main, Readme) .. Record
+(main, Readme) .. ResultSet
 
-Details -- Record : uses description >
-
-Record -- DetailedRecord : create from JSON data >
-Record *-- Result : create Embench score >
+ResultSet "1" *-- "*" Result
+Result -- InvalidResultError : raise on bad data >
+Result -- ResultDetails : create from JSON data >
+Result "1" *-- "3" Score : create Embench scores >
 
 @enduml

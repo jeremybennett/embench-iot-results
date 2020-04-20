@@ -27,11 +27,13 @@ We have three main classes
 
 from json import loads
 from json.decoder import JSONDecodeError
+import os
+import sys
 
 
-class Result:
+class Score:
     """
-    A class to capture one set of results (geometric mean and standard
+    A class to capture one set of scores (geometric mean and standard
     deviation) and compute the range derived from this.
     """
     def __init__(self, geomean, geosd):
@@ -71,7 +73,7 @@ class Result:
         return self.__geomean * self.__geosd
 
 
-class DetailedRecord:
+class ResultDetails:
     """
     All the data on a particular run held in its JSON file.
     """
@@ -79,25 +81,21 @@ class DetailedRecord:
         """
         Initialize from a JSON file. If this fails, then the data will be
         empty and we set the error fields.
+
+        Throws JSONDecodeError if the data is not valid
         """
         self.__resfile = resfile
-
         self.__json_data = None
+
         with open(resfile) as fileh:
-            try:
-                self.__json_data = loads(fileh.read())
-            except JSONDecodeError as jex:
-                self.__json_data = None
-                self.__err_lineno = jex.lineno
-                self.__err_colno = jex.colno
-                self.__err_msg = jex.msg
+            self.__json_data = loads(fileh.read())
 
     def desc(self):
         """
         Return the description. Only valid if we actually have data.
         """
         assert self.json_data, "No valid JSON data"
-        return self.__json_data['desc']
+        return self.__json_data['description']
 
     def json_data(self):
         """
@@ -105,173 +103,286 @@ class DetailedRecord:
         """
         return self.__json_data
 
-    def errmsg(self):
+    def details_page(self):
         """
-        Return an error message. Only valid if we failed to get data.
+        Return the name of the wikipage which will hold the details.
+
+        This is based on the JSON filename. We remove a .json suffix if it is
+        there, otherwise we just use the basename.  Then add .mediawiki
+        suffix.
         """
-        assert not self.__json_data, "No error in JSON data"
-        return (f'at line {self.__err_lineno}, '
-                f'column {self.__err_colno}: '
-                f'{self.__err_msg}')
+        basename = os.path.basename(self.__resfile)
+        root, suffix = os.path.splitext(basename)
+
+        # Sanity check
+        if suffix == '.json':
+            pagename = root + '.mediawiki'
+        else:
+            pagename = basename + '.mediawiki'
+
+        return pagename
+
+class InvalidResultError(Exception):
+    """
+    User exception when we have invalid JSON data for a result
+
+    Attributes:
+        missing_fields -- top level fields missing from the JSON data
+        missing_platform_fields - fields missing from platform info
+    """
+    def __init__(self, missing_fields, missing_platform_fields):
+        """
+        Initialize with two lists, one of top level JSON fields missing, one
+        with platform info fields missing.
+        """
+        super(InvalidResultError, self).__init__()
+        self.missing_fields = missing_fields
+        self.missing_platform_fields = missing_platform_fields
 
 
-class Record:
+class Result:
     """
     Top level record of a result. Its contents are mostly derived from the
-    DetailedRecord, but potentially supplemented by a link to a page with
+    ResultDetails, but potentially supplemented by a link to a page with
     details of the actual run.
     """
-    def __init__(self, resfile, details_wikipage):
-        """
-        Initialize from a JSON file. Throw an exception if the data is not
-        valid.  The second argument is the name of the Wiki page that will
-        hold all the details.
-        """
-        self.__detailed_record = DetailedRecord(resfile)
-        self.__details_wikipage = details_wikipage
-
-        # Set up useful fields if we have them
-        if self.valid_data():
-            json_data = self.__detailed_record.json_data()
-
-            self.__desc = json_data['description']
-            self.__arch = json_data['architecture family']
-            self.__embench_version = json_data['Embench version']
-
-            platform_info = json_data['platform information']
-            self.__cpu_mhz = platform_info['nominal clock rate (MHz)']
-
-            # Collect data
-            self.__results = dict()
-
-
-            if 'relative size results' in json_data:
-                size_data = json_data['relative size results']
-                self.__results['Size'] = Result(
-                    size_data['geometric mean'],
-                    size_data['geometric standard deviation']
-                )
-            else:
-                self.__results['Size'] = None
-
-            if 'relative speed results' in json_data:
-                speed_data = json_data['relative speed results']
-                self.__results['Speed'] = Result(
-                    speed_data['geometric mean'],
-                    speed_data['geometric standard deviation']
-                )
-                self.__results['Speed/MHz'] = Result(
-                    self.__results['Speed'].geomean() / self.__cpu_mhz,
-                    self.__results['Speed'].geosd()
-                )
-            else:
-                self.__results['Speed'] = None
-                self.__results['Speed/MHz'] = None
-
-    def valid_data(self, log=None):
+    def __validate_data(self):
         """
         Determine if the supplied data is valid, logging any omissions if a
         log file is provided.
-        """
-        json_data = self.__detailed_record.json_data()
 
-        # Must have data
-        if not json_data:
-            if log:
-                log.info('Invalid JSON data ' + self.__detailed_record.errmsg())
-            return False
+        Raises InvalidResultError if the JSON data is not good.
+        """
+        json_data = self.__result_details.json_data()
+
+        # We shouldn't be able to get here without data
+        assert json_data, "No JSON data for Result"
 
         # Must have key fields
+        missing_fields = set()
         fields = {
             'description', 'architecture family', 'Embench version',
-            'platform information',
         }
 
-        res = True
         for field in fields:
             if not field in json_data:
-                if log:
-                    log.debug(f'Missing JSON field {field}')
-                res = False
-
-        if not res:
-            return res
+                missing_fields.add(field)
 
         # Must have certain platform info
-        pfields = {
-            'nominal clock rate (MHz)',
-            'max clock rate (MHz)',
-            'isa',
-            'address size (bits)',
-            'processor version',
-            'number of enabled cores',
-            'hardware threads per core',
-            'caches',
-            'thermal design power',
-            'program memory size (kB)',
-            'data memory size (kB)',
-            'storage',
-            'external memory',
-            'external buses',
-            'misc accellerators and I/O devices',
-            'OS and version',
-        }
-        pinfo = json_data['platform information']
+        field = 'platform information'
+        missing_pfields = set()
+        if field in json_data:
+            pfields = {
+                'nominal clock rate (MHz)',
+                'max clock rate (MHz)',
+                'isa',
+                'address size (bits)',
+                'processor version',
+                'number of enabled cores',
+                'hardware threads per core',
+                'caches',
+                'thermal design power',
+                'program memory size (kB)',
+                'data memory size (kB)',
+                'storage',
+                'external memory',
+                'external buses',
+                'misc accellerators and I/O devices',
+                'OS and version',
+            }
+            pinfo = json_data[field]
 
-        res = True
-        for pfield in pfields:
-            if not pfield in pinfo:
-                if log:
-                    log.debug(f'Missing JSON plaform info {pfield}')
-                res = False
+            for pfield in pfields:
+                if not pfield in pinfo:
+                    missing_pfields.add(pfield)
+        else:
+            missing_fields.add(field)
 
-        return res
+        if missing_fields or missing_pfields:
+            raise InvalidResultError(missing_fields, missing_pfields)
 
-    def write_details(self, details):
+    def __init__(self, resfile):
         """
-        Write out a details file, as described in the supplied details
-        instance of the Details class.
-        """
-        details.write_results(self)
+        Initialize from a JSON file.
 
-    def details_wikipage(self):
+        May pass on the following exceptions:
+
+            JSONDecodeError -- the JSON file was not well formatted
+            InvalidResultError -- Fields were missing or invalid in the JSON
         """
-        Accessor for the details wikipage.
-        """
-        return self.__details_wikipage
+        # Get the raw data and check it is good.
+        self.__result_details = ResultDetails(resfile)
+        self.__validate_data()
+
+        # Now have good data.
+        json_data = self.__result_details.json_data()
+
+        # Collect data
+        self.__scores = dict()
+
+        # Size data
+        if 'relative size results' in json_data:
+            size_data = json_data['relative size results']
+            self.__scores['Size'] = Score(
+                size_data['geometric mean'],
+                size_data['geometric standard deviation']
+            )
+        else:
+            self.__scores['Size'] = None
+
+        # Speed data
+        if 'relative speed results' in json_data:
+            speed_data = json_data['relative speed results']
+            self.__scores['Speed'] = Score(
+                speed_data['geometric mean'],
+                speed_data['geometric standard deviation']
+            )
+            self.__scores['Speed/MHz'] = Score(
+                self.__scores['Speed'].geomean() / self.cpu_mhz(),
+                self.__scores['Speed'].geosd()
+            )
+        else:
+            self.__scores['Speed'] = None
+            self.__scores['Speed/MHz'] = None
 
     def desc(self):
         """
         Accessor for the test desc.
         """
-        return self.__desc
+        return self.__result_details.json_data()['description']
 
     def arch(self):
         """
         Accessor for the architecture family.
         """
-        return self.__arch
+        return self.__result_details.json_data()['architecture family']
 
     def embench_version(self):
         """
         Accessor for the Embench version
         """
-        return self.__embench_version
+        return self.__result_details.json_data()['Embench version']
 
     def cpu_mhz(self):
         """
         Accessor for the clock speed used for the test
         """
-        return self.__cpu_mhz
+        pinfo = self.__result_details.json_data()['platform information']
+        return pinfo['nominal clock rate (MHz)']
 
-    def results(self):
+    def scores(self):
         """
-        Accessor for the list of results associated with this test.
+        Accessor for the list of scores associated with this test.
         """
-        return self.__results
+        return self.__scores
 
     def details(self):
         """
         Accessor for the detailed results.
         """
-        return self.__detailed_record
+        return self.__result_details
+
+    def details_page(self):
+        """
+        Accessor for the details wikipage.
+        """
+        return self.__result_details.details_page()
+
+
+class ResultSet:
+    """
+    Collection of results. This is primarily to encapsulate the process of
+    enumerating and reading all the result files.
+    """
+    @staticmethod
+    def __collate_files(rootdir, log, resdir, resfiles):
+        """
+        Collate all the result files. It must be a list so we can sort it.
+        """
+        # Build up a list.
+        filelist = []
+        if resfiles:
+            # Specific results files from the command line
+            for resf in resfiles:
+                if os.path.isabs(resf):
+                    filelist.append(resf)
+                else:
+                    absresf = os.path.join(resdir, resf)
+                    if os.access(absresf, os.R_OK):
+                        filelist.append(absresf)
+                    else:
+                        absresf = os.path.join(rootdir, resf)
+                        if os.access(absresf, os.R_OK):
+                            filelist.append(absresf)
+                        else:
+                            log.warning(f'Warning: Unable to find result file '
+                                        f'{resf}: ignored')
+        else:
+            # All results files. No need to sort them, since they'll get
+            # sorted later.
+            dirlist = os.listdir(resdir)
+            for resf in dirlist:
+                _, suffix = os.path.splitext(resf)
+                absresf = os.path.join(resdir, resf)
+                if (suffix == '.json' and os.path.isfile(absresf) and
+                        os.access(absresf, os.R_OK)):
+                    resfiles.append(absresf)
+
+        # Sanity check
+        if not filelist:
+            log.error(f'ERROR: No results files found')
+            sys.exit(1)
+
+        return filelist
+
+    def __init__(self, rootdir, log, resdir, resfiles):
+        """
+        If we are given a list of resfiles, then read each as a JSON file to
+        get the result details, otherwise enumerate all files with the suffix
+        '.json' in the resdir.
+
+        Relative files are looked for first relative to resdir, then relative
+        to rootdir
+        """
+        # Build up a list of files that may contain results
+        filelist = self.__collate_files(rootdir, log, resdir, resfiles)
+
+        # Now open each in turn and build up a list of results
+        self.__results = []
+        for resf in filelist:
+            # Reading JSON data may fail and is caught here.
+            result = None
+            try:
+                result = Result(resf)
+            except JSONDecodeError as jex:
+                log.warning(
+                    f'Warning: {resf}: Invalid JSON data at line ' +
+                    f'{jex.lineno}, column {jex.colno}: {jex.msg}: ' +
+                    f'result file ignored.'
+                )
+            except InvalidResultError as irex:
+                for mfield in irex.missing_fields:
+                    log.debug(f'{resf}: Missing JSON field {mfield}')
+                for mpfield in irex.missing_platform_fields:
+                    log.debug(
+                        f'{resf}: Missing JSON plaform info field {mpfield}'
+                    )
+                log.warning(
+                    f'Warning: {resf}: Missing JSON fields: result file ignored.'
+                )
+
+            if result:
+                self.__results.append(result)
+
+    def sort(self, key, reverse):
+        """
+        Sort the list of results. Arguments are the same as to the sorted
+        function.
+        """
+        self.__results = sorted(self.__results, key=key, reverse=reverse)
+
+    def results(self):
+        """
+        Accessor for the list of results.
+        """
+        return self.__results

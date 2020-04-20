@@ -25,15 +25,20 @@ class Readme:
     """
     A class to handle README file generation
     """
-    def __init__(self, readme_hdr, readme, details_dir):
+    def __init__(self, readme_hdr, readme, absdetailsdir, detailsdir):
         """
-        The constructor just keeps a copy of the file handles and the
-        directory with pages of details.
+        The constructor just keeps a copy of the file handles, creates a
+        writer for details pages and the relative directory with pages of
+        details.
         """
+        # Sanity check
+        assert os.path.isabs(absdetailsdir), f'{absdetailsdir} is relative'
+
         # Record the file handle.
         self.__readme_hdr = readme_hdr
         self.__readme = readme
-        self.__details_dir = details_dir
+        self.__absdetailsdir = absdetailsdir
+        self.__detailsdir = detailsdir
 
     def __wiki_tblhdr(self):
         """
@@ -56,13 +61,13 @@ class Readme:
         # Put out the lines
         self.__readme.writelines(f'|- align="left"\n')
         self.__readme.writelines(f'|  rowspan="3" | {res.arch()}\n')
-        dref = f'{self.__details_dir}/{res.details_wikipage()}'
+        dref = f'{self.__detailsdir}/{res.details_page()}'
         self.__readme.writelines(f'|  rowspan="3" | [[{dref}|{res.desc()}]]\n')
         self.__readme.writelines(f'|  align="right" rowspan="3" | '
                                  f'{res.cpu_mhz()}\n')
 
         # Line for each type of result
-        resvals = res.results()
+        resvals = res.scores()
 
         for rtype in ['Size', 'Speed', 'Speed/MHz']:
             rval = resvals[rtype]
@@ -89,7 +94,26 @@ class Readme:
         for line in self.__readme_hdr:
             self.__readme.writelines(line)
 
-    def write_table(self, title, reslist):
+    def __write_details(self, details):
+        """
+        Write out a file with all the details for a set of results.
+
+        Raises OSError if there is a problem opening the file
+        """
+        fileh = open(
+            os.path.join(self.__absdetailsdir, details.details_page()), 'w'
+        )
+
+        fileh.writelines(f'== {details.desc()} ==\n')
+
+    def write_all_details(self, result_set):
+        """
+        Write out all the details files for the supplied set of results
+        """
+        for res in result_set.results():
+            self.__write_details(res.details())
+
+    def write_table(self, title, result_set):
         """
         Given a list of results generate them as a mediawiki table, preceded
         by the supplied level 3 title
@@ -101,51 +125,8 @@ class Readme:
         self.__wiki_tblhdr()
 
         # The wiki table body - one row for each entry
-        for res in reslist:
+        for res in result_set.results():
             self.__wiki_tblrow(res)
 
         # The wiki table footer
         self.__wiki_tblftr()
-
-
-class Details:
-    """
-    A class to deal with the details for each set of results
-    """
-    def __open(self, filepath):
-        """
-        Private method to open the details file for writing. Return the file
-        handle.
-        """
-        fileh = None
-        try:
-            fileh = open(filepath, 'w')
-        except OSError as osex:
-            log.error(f'ERROR: Could not open {filepath} for writing: ' +
-                      f'{osex.strerror}: exiting.')
-            sys.exit(1)
-
-        return fileh
-
-    def __init__(self, absdetailsdir, detailsfile):
-        """
-        The constructor opens the detailsfile for writing. We pass the
-        absolute directory name, so this will work from any directory.
-        """
-        # Sanity check
-        if not os.path.isabs(absdetailsdir):
-            log.error(
-                f'ERROR: {absdetailsdir} must be passed to the Details class ' +
-                f'constructor as an absolute directory name. Check the code.'
-            )
-            sys.exit(2)
-
-        # Record the details file name and the file handle
-        self.__filename = detailsfile
-        self.__fileh = self.__open(os.path.join(absdetailsdir, detailsfile))
-
-    def write_results(self, record):
-        """
-        Write out the details of one result.
-        """
-        self.__fileh.writelines(f'== {record.desc()} ==\n')
