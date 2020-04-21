@@ -237,9 +237,9 @@ class Readme:
         # Put the results in a table
         fileh.writelines('{| class="wikitable sortable"\n')
         fileh.writelines('! align="left"  |\n')
-        fileh.writelines('! rowspan="2" align="center" | Size\n')
-        fileh.writelines('! rowspan="2" align="center" | Speed\n')
-        fileh.writelines('!- align="left"\n')
+        fileh.writelines('! colspan="2" align="center" | Size\n')
+        fileh.writelines('! colspan="2" align="center" | Speed\n')
+        fileh.writelines('|- align="left"\n')
         fileh.writelines('! align="left" | Benchmark\n')
         fileh.writelines('! align="right"  | Absolute\n')
         fileh.writelines('! align="right" | Relative\n')
@@ -250,20 +250,22 @@ class Readme:
             fileh.writelines(f'|- align="left"\n')
             fileh.writelines(f'| {benchmark}\n')
             for restype in ['abs_size', 'rel_size', 'abs_speed', 'rel_speed']:
-                fileh.writelines(f'| align="right" | {res[restype]}\n')
+                fileh.writelines(f'| align="right" | {res[restype]:,}\n')
 
         # Geometric mean and SD
         fileh.writelines(f'|- align="left"\n')
-        fileh.writelines(f'| Geometric mean\n')
+        fileh.writelines(f'! Geometric mean\n')
         for restype in ['rel_size', 'rel_speed']:
             geomean = all_res[restype].pop('geometric mean')
-            fileh.writelines(f'| align="right" | {geomean}\n')
+            fileh.writelines(f'!\n')
+            fileh.writelines(f'! align="right" | {geomean:,}\n')
 
         fileh.writelines(f'|- align="left"\n')
-        fileh.writelines(f'| Geometric standard deviation\n')
+        fileh.writelines(f'! Geometric standard deviation\n')
         for restype in ['rel_size', 'rel_speed']:
             geosd = all_res[restype].pop('geometric standard deviation')
-            fileh.writelines(f'| align="right" | {geosd}\n')
+            fileh.writelines(f'!\n')
+            fileh.writelines(f'! align="right" | {geosd:,}\n')
 
         fileh.writelines('|}\n\n')
 
