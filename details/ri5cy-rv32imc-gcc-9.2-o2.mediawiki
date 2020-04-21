@@ -81,9 +81,9 @@
 Section types included in size data: text
 {| class="wikitable sortable"
 ! align="left"  |
-! rowspan="2" align="center" | Size
-! rowspan="2" align="center" | Speed
-!- align="left"
+! colspan="2" align="center" | Size
+! colspan="2" align="center" | Speed
+|- align="left"
 ! align="left" | Benchmark
 ! align="right"  | Absolute
 ! align="right" | Relative
@@ -204,13 +204,17 @@ Section types included in size data: text
 | align="right" | 2111
 | align="right" | 1.32
 |- align="left"
-| Geometric mean
-| align="right" | 1.05
-| align="right" | 0.93
+! Geometric mean
+!
+! align="right" | 1.05
+!
+! align="right" | 0.93
 |- align="left"
-| Geometric standard deviation
-| align="right" | 1.22
-| align="right" | 1.35
+! Geometric standard deviation
+!
+! align="right" | 1.22
+!
+! align="right" | 1.35
 |}
 
 == Other information ==
