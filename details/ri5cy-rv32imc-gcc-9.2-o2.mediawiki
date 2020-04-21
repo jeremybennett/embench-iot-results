@@ -98,7 +98,7 @@ Section types included in size data: text
 |- align="left"
 | crc32
 | align="right" | 226
-| align="right" | 0.8
+| align="right" | 0.80
 | align="right" | 4,705
 | align="right" | 0.85
 |- align="left"
@@ -154,7 +154,7 @@ Section types included in size data: text
 | align="right" | 15,228
 | align="right" | 1.27
 | align="right" | 3,629
-| align="right" | 1.1
+| align="right" | 1.10
 |- align="left"
 | picojpeg
 | align="right" | 7,792
@@ -166,7 +166,7 @@ Section types included in size data: text
 | align="right" | 6,020
 | align="right" | 1.04
 | align="right" | 3,537
-| align="right" | 1.2
+| align="right" | 1.20
 |- align="left"
 | sglib-combined
 | align="right" | 2,330
@@ -176,9 +176,9 @@ Section types included in size data: text
 |- align="left"
 | slre
 | align="right" | 2,426
-| align="right" | 1.1
+| align="right" | 1.10
 | align="right" | 3,345
-| align="right" | 1.2
+| align="right" | 1.20
 |- align="left"
 | st
 | align="right" | 856
@@ -196,7 +196,7 @@ Section types included in size data: text
 | align="right" | 732
 | align="right" | 1.02
 | align="right" | 4,998
-| align="right" | 0.8
+| align="right" | 0.80
 |- align="left"
 | wikisort
 | align="right" | 4,142

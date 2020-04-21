@@ -250,7 +250,11 @@ class Readme:
             fileh.writelines(f'|- align="left"\n')
             fileh.writelines(f'| {benchmark}\n')
             for restype in ['abs_size', 'rel_size', 'abs_speed', 'rel_speed']:
-                fileh.writelines(f'| align="right" | {res[restype]:,}\n')
+                # Absolute values are large, relative small.
+                if restype in ['abs_size', 'abs_speed']:
+                    fileh.writelines(f'| align="right" | {res[restype]:,}\n')
+                else:
+                    fileh.writelines(f'| align="right" | {res[restype]:,.2f}\n')
 
         # Geometric mean and SD
         fileh.writelines(f'|- align="left"\n')
@@ -258,14 +262,14 @@ class Readme:
         for restype in ['rel_size', 'rel_speed']:
             geomean = all_res[restype].pop('geometric mean')
             fileh.writelines(f'!\n')
-            fileh.writelines(f'! align="right" | {geomean:,}\n')
+            fileh.writelines(f'! align="right" | {geomean:,.2f}\n')
 
         fileh.writelines(f'|- align="left"\n')
         fileh.writelines(f'! Geometric standard deviation\n')
         for restype in ['rel_size', 'rel_speed']:
             geosd = all_res[restype].pop('geometric standard deviation')
             fileh.writelines(f'!\n')
-            fileh.writelines(f'! align="right" | {geosd:,}\n')
+            fileh.writelines(f'! align="right" | {geosd:,.2f}\n')
 
         fileh.writelines('|}\n\n')
 
