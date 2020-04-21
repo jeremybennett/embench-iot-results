@@ -7,6 +7,7 @@
     "max clock rate (MHz)" : "n/a",
     "isa" : "RV32IMFC",
     "address size (bits)" : 32,
+    "processor name" : "PULP RI5CY",
     "processor version" : "GitHub commit 300762a",
     "number of enabled cores" : 1,
     "hardware threads per core" : 1,
@@ -43,7 +44,9 @@
       ]
     }
   },
-  "sections in size results" : "text",
+  "sections in size results" :
+  [ "text"
+  ],
   "absolute size results" :
   { "detailed results" :
     { "aha-mont64" : 1038,
@@ -139,5 +142,11 @@
     },
     "geometric mean" : 0.93,
     "geometric standard deviation" : 1.35
-  }
+  },
+  "dummy stuff" :
+  { "dummy1" :
+    { "dummy2" : 32
+    }
+  },
+  "more dummy stuff" : 561
 }

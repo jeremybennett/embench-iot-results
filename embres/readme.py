@@ -169,8 +169,15 @@ class Readme:
         fileh.writelines('{| class="wikitable sortable"\n')
 
         for field, val in tcfinfo.items():
+            # Flag values are a list of flags
+            flagstr = ""
+            for flag in val:
+                if flagstr:
+                    flagstr = f'{flagstr} {flag}'
+                else:
+                    flagstr = f'{flag}'
             fileh.writelines(f'|- align="left"\n')
-            fileh.writelines(f'| {field} || {val}\n')
+            fileh.writelines(f'| {field} || {flagstr}\n')
 
         fileh.writelines('|}\n\n')
 
@@ -186,6 +193,116 @@ class Readme:
                 fileh.writelines(f'| {field} || {val}\n')
 
             fileh.writelines('|}\n\n')
+
+    @staticmethod
+    def __write_detailed_results(fileh, json_data):
+        """
+        Static method to write out detailed results.
+        """
+        # Section title
+        fileh.writelines('== Detailed Embench results ==\n\n')
+
+        # What section types are included in size data
+        sectypes = json_data.pop('sections in size results', None)
+
+        # Section values are a list of section types
+        if sectypes:
+            secstr = ""
+            for sec in sectypes:
+                if secstr:
+                    secstr = f'{secstr} {sec}'
+                else:
+                    secstr = f'{sec}'
+            fileh.writelines(f'Section types included in size data: {secstr}\n')
+
+        # Collate data, so we can tabulate. This is a dictionary keyed by the
+        # benchmark name. The values are themselves 4 element dictionaries,
+        # keyed as 'abs_size', 'rel_size', 'abs_speed' and 'rel_speed'
+
+        all_res = {
+            'abs_size' : json_data.pop('absolute size results', None),
+            'rel_size' : json_data.pop('relative size results', None),
+            'abs_speed' : json_data.pop('absolute speed results', None),
+            'rel_speed' : json_data.pop('relative speed results', None),
+        }
+
+        results = dict()
+        for restype in {'abs_size', 'rel_size', 'abs_speed', 'rel_speed'}:
+            data = all_res[restype].pop('detailed results')
+            for benchmark, val in data.items():
+                if not benchmark in results:
+                    results[benchmark] = dict()
+                results[benchmark][restype] = val
+
+        # Put the results in a table
+        fileh.writelines('{| class="wikitable sortable"\n')
+        fileh.writelines('! align="left"  |\n')
+        fileh.writelines('! rowspan="2" align="center" | Size\n')
+        fileh.writelines('! rowspan="2" align="center" | Speed\n')
+        fileh.writelines('!- align="left"\n')
+        fileh.writelines('! align="left" | Benchmark\n')
+        fileh.writelines('! align="right"  | Absolute\n')
+        fileh.writelines('! align="right" | Relative\n')
+        fileh.writelines('! align="right"  | Absolute\n')
+        fileh.writelines('! align="right" | Relative\n')
+
+        for benchmark, res in results.items():
+            fileh.writelines(f'|- align="left"\n')
+            fileh.writelines(f'| {benchmark}\n')
+            for restype in ['abs_size', 'rel_size', 'abs_speed', 'rel_speed']:
+                fileh.writelines(f'| align="right" | {res[restype]}\n')
+
+        # Geometric mean and SD
+        fileh.writelines(f'|- align="left"\n')
+        fileh.writelines(f'| Geometric mean\n')
+        for restype in ['rel_size', 'rel_speed']:
+            geomean = all_res[restype].pop('geometric mean')
+            fileh.writelines(f'| align="right" | {geomean}\n')
+
+        fileh.writelines(f'|- align="left"\n')
+        fileh.writelines(f'| Geometric standard deviation\n')
+        for restype in ['rel_size', 'rel_speed']:
+            geosd = all_res[restype].pop('geometric standard deviation')
+            fileh.writelines(f'| align="right" | {geosd}\n')
+
+        fileh.writelines('|}\n\n')
+
+    @staticmethod
+    def __write_other(fileh, json_data, hdr_intro, title):
+        """
+        Static method to write out any remaining data.
+
+        If we have a dictionary as value, we write they key out as a heading
+        and recurse to write the rest.
+        """
+        # May have nothing!
+        if not json_data:
+            return
+
+        # Have something, give it a title
+        fileh.writelines(f'{hdr_intro} {title} {hdr_intro}\n\n')
+
+        # Deal with scalar values first.
+        scalar_vals = dict()
+        for key, val in json_data.items():
+            if not isinstance(val, dict):
+                scalar_vals[key] = val
+
+        # Write out a table of scalar values
+        if scalar_vals:
+            fileh.writelines('{| class="wikitable sortable"\n')
+            for key, val in scalar_vals.items():
+                fileh.writelines(f'|- align="left"\n')
+                fileh.writelines(f'| {key} || {val}\n')
+            fileh.writelines('|}\n\n')
+
+
+        # Now write any dictionaries in their own subsections.
+        for key, val in json_data.items():
+            if isinstance(val, dict):
+                Readme.__write_other(
+                    fileh, val, hdr_intro + '=', key
+                )
 
     def __write_details(self, details):
         """
@@ -203,6 +320,8 @@ class Readme:
         self.__write_general_details(fileh, json_data)
         self.__write_platform_info(fileh, json_data)
         self.__write_tool_chain_info(fileh, json_data)
+        self.__write_detailed_results(fileh, json_data)
+        self.__write_other(fileh, json_data, '==', 'Other information')
         fileh.close()
 
     def write_all_details(self, result_set):

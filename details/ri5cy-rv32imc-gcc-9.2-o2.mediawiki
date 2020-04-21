@@ -21,6 +21,8 @@
 |- align="left"
 | address size (bits) || 32
 |- align="left"
+| processor name || PULP RI5CY
+|- align="left"
 | processor version || GitHub commit 300762a
 |- align="left"
 | number of enabled cores || 1
@@ -69,8 +71,161 @@
 
 {| class="wikitable sortable"
 |- align="left"
-| compiler || ['-O2', '-march=rv32imc', '-mabi=ilp32', '-ffunction-sections']
+| compiler || -O2 -march=rv32imc -mabi=ilp32 -ffunction-sections
 |- align="left"
-| linker || ['-march=rv32imc', '-mabi=ilp32', '-Wl,-gc-sections']
+| linker || -march=rv32imc -mabi=ilp32 -Wl,-gc-sections
+|}
+
+== Detailed Embench results ==
+
+Section types included in size data: text
+{| class="wikitable sortable"
+! align="left"  |
+! rowspan="2" align="center" | Size
+! rowspan="2" align="center" | Speed
+!- align="left"
+! align="left" | Benchmark
+! align="right"  | Absolute
+! align="right" | Relative
+! align="right"  | Absolute
+! align="right" | Relative
+|- align="left"
+| aha-mont64
+| align="right" | 1038
+| align="right" | 0.97
+| align="right" | 5378
+| align="right" | 0.74
+|- align="left"
+| crc32
+| align="right" | 226
+| align="right" | 0.8
+| align="right" | 4705
+| align="right" | 0.85
+|- align="left"
+| cubic
+| align="right" | 2418
+| align="right" | 1.53
+| align="right" | 8288
+| align="right" | 0.47
+|- align="left"
+| edn
+| align="right" | 1430
+| align="right" | 1.08
+| align="right" | 4354
+| align="right" | 0.92
+|- align="left"
+| huffbench
+| align="right" | 1650
+| align="right" | 1.33
+| align="right" | 3682
+| align="right" | 1.12
+|- align="left"
+| matmult-int
+| align="right" | 418
+| align="right" | 0.85
+| align="right" | 3934
+| align="right" | 1.01
+|- align="left"
+| minver
+| align="right" | 1060
+| align="right" | 0.91
+| align="right" | 6871
+| align="right" | 0.58
+|- align="left"
+| nbody
+| align="right" | 824
+| align="right" | 0.87
+| align="right" | 3751
+| align="right" | 0.75
+|- align="left"
+| nettle-aes
+| align="right" | 2716
+| align="right" | 1.26
+| align="right" | 4720
+| align="right" | 0.85
+|- align="left"
+| nettle-sha256
+| align="right" | 5526
+| align="right" | 1.63
+| align="right" | 4853
+| align="right" | 0.82
+|- align="left"
+| nsichneu
+| align="right" | 15228
+| align="right" | 1.27
+| align="right" | 3629
+| align="right" | 1.1
+|- align="left"
+| picojpeg
+| align="right" | 7792
+| align="right" | 1.12
+| align="right" | 4435
+| align="right" | 0.91
+|- align="left"
+| qrduino
+| align="right" | 6020
+| align="right" | 1.04
+| align="right" | 3537
+| align="right" | 1.2
+|- align="left"
+| sglib-combined
+| align="right" | 2330
+| align="right" | 1.03
+| align="right" | 3546
+| align="right" | 1.12
+|- align="left"
+| slre
+| align="right" | 2426
+| align="right" | 1.1
+| align="right" | 3345
+| align="right" | 1.2
+|- align="left"
+| st
+| align="right" | 856
+| align="right" | 0.86
+| align="right" | 4942
+| align="right" | 0.83
+|- align="left"
+| statemate
+| align="right" | 3696
+| align="right" | 0.82
+| align="right" | 2090
+| align="right" | 1.91
+|- align="left"
+| ud
+| align="right" | 732
+| align="right" | 1.02
+| align="right" | 4998
+| align="right" | 0.8
+|- align="left"
+| wikisort
+| align="right" | 4142
+| align="right" | 0.96
+| align="right" | 2111
+| align="right" | 1.32
+|- align="left"
+| Geometric mean
+| align="right" | 1.05
+| align="right" | 0.93
+|- align="left"
+| Geometric standard deviation
+| align="right" | 1.22
+| align="right" | 1.35
+|}
+
+== Other information ==
+
+{| class="wikitable sortable"
+|- align="left"
+| more dummy stuff || 561
+|}
+
+=== dummy stuff ===
+
+==== dummy1 ====
+
+{| class="wikitable sortable"
+|- align="left"
+| dummy2 || 32
 |}
 
