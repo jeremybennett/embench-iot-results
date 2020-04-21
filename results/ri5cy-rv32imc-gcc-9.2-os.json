@@ -1,4 +1,4 @@
-{ "description" : "RI5CY RV32IMC GCC 9.2 -O2",
+{ "description" : "RI5CY RV32IMC GCC 9.2 -Os",
   "Embench version" : "0.5",
   "architecture family" : "RV32",
   "date/time" : "2020-02-27 12:15:00+01:00",
@@ -32,10 +32,11 @@
     },
     "tool chain flags" :
     { "compiler" :
-      [ "-O2",
+      [ "-Os",
 	"-march=rv32imc",
 	"-mabi=ilp32",
-	"-ffunction-sections"
+	"-ffunction-sections",
+	"-fdata-sections"
       ],
       "linker" :
       [ "-march=rv32imc",

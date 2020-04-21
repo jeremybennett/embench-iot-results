@@ -1,4 +1,4 @@
-== RI5CY RV32IMC GCC 9.2 -O2 ==
+== RI5CY RV32IMC GCC 9.2 -Os ==
 
 {| class="wikitable sortable"
 |- align="left"
@@ -71,7 +71,7 @@
 
 {| class="wikitable sortable"
 |- align="left"
-| compiler || -O2 -march=rv32imc -mabi=ilp32 -ffunction-sections
+| compiler || -Os -march=rv32imc -mabi=ilp32 -ffunction-sections -fdata-sections
 |- align="left"
 | linker || -march=rv32imc -mabi=ilp32 -Wl,-gc-sections
 |}

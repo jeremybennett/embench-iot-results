@@ -336,7 +336,7 @@ class ResultSet:
                 absresf = os.path.join(resdir, resf)
                 if (suffix == '.json' and os.path.isfile(absresf) and
                         os.access(absresf, os.R_OK)):
-                    resfiles.append(absresf)
+                    filelist.append(absresf)
 
         # Sanity check
         if not filelist:

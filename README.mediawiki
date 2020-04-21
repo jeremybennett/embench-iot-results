@@ -47,6 +47,22 @@ deviation above.
 |  align="right" | 0.93
 |  align="center" | 0.69- 1.26
 |-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
 |}
 
 === Results sorted by Embench speed score/MHz ===
@@ -61,6 +77,22 @@ deviation above.
 |- align="left"
 |  rowspan="3" | RV32
 |  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -101,6 +133,22 @@ deviation above.
 |  align="right" | 0.93
 |  align="center" | 0.69- 1.26
 |-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
 |}
 
 === Per architecture results sorted by Embench speed score ===
@@ -115,6 +163,22 @@ deviation above.
 |- align="left"
 |  rowspan="3" | RV32
 |  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
@@ -155,6 +219,22 @@ deviation above.
 |  align="right" | 0.93
 |  align="center" | 0.69- 1.26
 |-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
 |}
 
 === Per achitecture results sorted by Embench size score ===
@@ -169,6 +249,22 @@ deviation above.
 |- align="left"
 |  rowspan="3" | RV32
 |  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2]]
+|  align="right" rowspan="3" | 1
+|  Size
+|  align="right" | 1.05
+|  align="center" | 0.86- 1.28
+|-
+|  Speed
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|  Speed/MHz
+|  align="right" | 0.93
+|  align="center" | 0.69- 1.26
+|-
+|- align="left"
+|  rowspan="3" | RV32
+|  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-os.mediawiki|RI5CY RV32IMC GCC 9.2 -Os]]
 |  align="right" rowspan="3" | 1
 |  Size
 |  align="right" | 1.05
