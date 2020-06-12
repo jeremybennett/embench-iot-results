@@ -240,16 +240,16 @@ class Result:
         else:
             self.__scores['Size'] = None
 
-        # Speed data
+        # Speed data in file is per MHz
         if 'relative speed results' in json_data:
             speed_data = json_data['relative speed results']
-            self.__scores['Speed'] = Score(
+            self.__scores['Speed/MHz'] = Score(
                 speed_data['geometric mean'],
                 speed_data['geometric standard deviation']
             )
-            self.__scores['Speed/MHz'] = Score(
-                self.__scores['Speed'].geomean() / self.cpu_mhz(),
-                self.__scores['Speed'].geosd()
+            self.__scores['Speed'] = Score(
+                self.__scores['Speed/MHz'].geomean() * self.cpu_mhz(),
+                self.__scores['Speed/MHz'].geosd()
             )
         else:
             self.__scores['Speed'] = None

@@ -40,12 +40,28 @@ deviation above.
 |  align="center" | 1.04- 1.28
 |-
 |  Speed
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
+|-
+|  Speed/MHz
 |  align="right" | 1.00
 |  align="center" | 1.00- 1.00
 |-
+|- align="left"
+|  rowspan="3" | Arm
+|  rowspan="3" | [[details/cortexm4-armv7m-gcc-9.2-os.mediawiki|CORTEX-M4 ARMV7-M GCC 9.2 -Os -ffunction-sections]]
+|  align="right" rowspan="3" | 16
+|  Size
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
+|-
+|  Speed
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
+|-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |- align="left"
 |  rowspan="3" | RV32
@@ -78,22 +94,6 @@ deviation above.
 |  Speed/MHz
 |  align="right" | 0.93
 |  align="center" | 0.69- 1.26
-|-
-|- align="left"
-|  rowspan="3" | Arm
-|  rowspan="3" | [[details/cortexm4-armv7m-gcc-9.2-os.mediawiki|CORTEX-M4 ARMV7-M GCC 9.2 -Os -ffunction-sections]]
-|  align="right" rowspan="3" | 16
-|  Size
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
-|-
-|  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
-|-
-|  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
 |-
 |}
 
@@ -107,6 +107,22 @@ deviation above.
 ! align="right" | Score
 ! align="center" | Range
 |- align="left"
+|  rowspan="3" | Arm
+|  rowspan="3" | [[details/cortexm4-armv7m-gcc-9.2-o2.mediawiki|CORTEX-M4 ARMV7-M GCC 9.2 -O2 -ffunction-sections]]
+|  align="right" rowspan="3" | 16
+|  Size
+|  align="right" | 1.15
+|  align="center" | 1.04- 1.28
+|-
+|  Speed
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
+|-
+|  Speed/MHz
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
+|-
+|- align="left"
 |  rowspan="3" | RV32
 |  rowspan="3" | [[details/ri5cy-rv32imc-gcc-9.2-o2.mediawiki|RI5CY RV32IMC GCC 9.2 -O2 -ffunction-sections]]
 |  align="right" rowspan="3" | 1
@@ -140,22 +156,6 @@ deviation above.
 |-
 |- align="left"
 |  rowspan="3" | Arm
-|  rowspan="3" | [[details/cortexm4-armv7m-gcc-9.2-o2.mediawiki|CORTEX-M4 ARMV7-M GCC 9.2 -O2 -ffunction-sections]]
-|  align="right" rowspan="3" | 16
-|  Size
-|  align="right" | 1.15
-|  align="center" | 1.04- 1.28
-|-
-|  Speed
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
-|-
-|  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
-|-
-|- align="left"
-|  rowspan="3" | Arm
 |  rowspan="3" | [[details/cortexm4-armv7m-gcc-9.2-os.mediawiki|CORTEX-M4 ARMV7-M GCC 9.2 -Os -ffunction-sections]]
 |  align="right" rowspan="3" | 16
 |  Size
@@ -163,12 +163,12 @@ deviation above.
 |  align="center" | 1.00- 1.00
 |-
 |  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |}
 
@@ -190,12 +190,12 @@ deviation above.
 |  align="center" | 1.00- 1.00
 |-
 |  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |- align="left"
 |  rowspan="3" | RV32
@@ -222,12 +222,12 @@ deviation above.
 |  align="center" | 1.04- 1.28
 |-
 |  Speed
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
 |-
 |- align="left"
 |  rowspan="3" | RV32
@@ -265,12 +265,12 @@ deviation above.
 |  align="center" | 1.04- 1.28
 |-
 |  Speed
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
 |-
 |- align="left"
 |  rowspan="3" | Arm
@@ -281,12 +281,12 @@ deviation above.
 |  align="center" | 1.00- 1.00
 |-
 |  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |- align="left"
 |  rowspan="3" | RV32
@@ -340,12 +340,12 @@ deviation above.
 |  align="center" | 1.04- 1.28
 |-
 |  Speed
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
 |-
 |- align="left"
 |  rowspan="3" | Arm
@@ -356,12 +356,12 @@ deviation above.
 |  align="center" | 1.00- 1.00
 |-
 |  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |- align="left"
 |  rowspan="3" | RV32
@@ -415,12 +415,12 @@ deviation above.
 |  align="center" | 1.00- 1.00
 |-
 |  Speed
-|  align="right" | 0.90
-|  align="center" | 0.78- 1.03
+|  align="right" | 14.40
+|  align="center" | 12.52- 16.56
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.05- 0.06
+|  align="right" | 0.90
+|  align="center" | 0.78- 1.03
 |-
 |- align="left"
 |  rowspan="3" | Arm
@@ -431,12 +431,12 @@ deviation above.
 |  align="center" | 1.04- 1.28
 |-
 |  Speed
-|  align="right" | 1.00
-|  align="center" | 1.00- 1.00
+|  align="right" | 16.00
+|  align="center" | 16.00- 16.00
 |-
 |  Speed/MHz
-|  align="right" | 0.06
-|  align="center" | 0.06- 0.06
+|  align="right" | 1.00
+|  align="center" | 1.00- 1.00
 |-
 |- align="left"
 |  rowspan="3" | RV32
