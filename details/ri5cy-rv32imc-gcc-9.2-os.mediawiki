@@ -58,7 +58,7 @@
 |- align="left"
 | compiler configuration || --target=riscv32-unknown-elf --disable-shared --enable-static --disable-gtk-doc --disable-gtk-doc-html --disable-doc --disable-docs --disable-documentation --with-xmlto=no --with-fop=no --disable-__cxa_atexit --with-gnu-ld --disable-libssp --disable-multilib --enable-target-optspace --disable-libsanitizer --disable-tls --disable-libmudflap --disable-threads --disable-libquadmath --disable-libgomp --without-isl --without-cloog --disable-decimal-float --enable-languages=c --with-newlib --disable-largefile --enable-plugins --disable-nls --enable-checking=yes --with-arch=rv32imc --with-abi=ilp32
 |- align="left"
-| linker version || GNU binutils ld 2.32
+| linker version || GNU binutils ld 2.33.1
 |- align="left"
 | linker configuration || --target=riscv32-unknown-elf --disable-gtk-doc --disable-gtk-doc-html --disable-doc --disable-docs --disable-documentation --with-fop=no --disable-multilib --enable-plugins --enable-poison-system-directories --disable-tls --disable-sim
 |- align="left"
@@ -71,7 +71,7 @@
 
 {| class="wikitable sortable"
 |- align="left"
-| compiler || -Os -march=rv32imc -mabi=ilp32 -ffunction-sections -fdata-sections
+| compiler || -Os -march=rv32imc -mabi=ilp32 -ffunction-sections -fdata-sections -msave-restore
 |- align="left"
 | linker || -march=rv32imc -mabi=ilp32 -Wl,-gc-sections
 |}

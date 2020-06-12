@@ -25,7 +25,7 @@
   { "tool chain version" :
     { "compiler version" : "gcc 9.2.0",
       "compiler configuration" : "--target=riscv32-unknown-elf --disable-shared --enable-static --disable-gtk-doc --disable-gtk-doc-html --disable-doc --disable-docs --disable-documentation --with-xmlto=no --with-fop=no --disable-__cxa_atexit --with-gnu-ld --disable-libssp --disable-multilib --enable-target-optspace --disable-libsanitizer --disable-tls --disable-libmudflap --disable-threads --disable-libquadmath --disable-libgomp --without-isl --without-cloog --disable-decimal-float --enable-languages=c --with-newlib --disable-largefile --enable-plugins --disable-nls --enable-checking=yes --with-arch=rv32imc --with-abi=ilp32",
-      "linker version" : "GNU binutils ld 2.32",
+      "linker version" : "GNU binutils ld 2.33.1",
       "linker configuration" : "--target=riscv32-unknown-elf --disable-gtk-doc --disable-gtk-doc-html --disable-doc --disable-docs --disable-documentation --with-fop=no --disable-multilib --enable-plugins --enable-poison-system-directories --disable-tls --disable-sim",
       "C library version" : "newlib 3.3.0",
       "C library configuration" : "--target=riscv32-unknown-elf --disable-newlib-fvwrite-in-streamio --disable-newlib-fseek-optimization --enable-newlib-nano-malloc --disable-newlib-unbuf-stream-opt --enable-target-optspace --enable-newlib-reent-small --disable-newlib-wide-orient --disable-newlib-io-float --enable-newlib-nano-formatted-io --enable-lite-exit --disable-newlib-supplied-syscalls CFLAGS_FOR_TARGET=-DHAVE_GNU_LD -DPREFER_SIZE_OVER_SPEED=1 -Os --with-arch=rv32imc --with-abi=ilp32"
@@ -36,7 +36,8 @@
 	"-march=rv32imc",
 	"-mabi=ilp32",
 	"-ffunction-sections",
-	"-fdata-sections"
+	"-fdata-sections",
+	"-msave-restore"
       ],
       "linker" :
       [ "-march=rv32imc",

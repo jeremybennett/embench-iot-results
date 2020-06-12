@@ -50,7 +50,11 @@ def main():
     )
 
     # Create all the details files
-    readme.write_all_details(reslist)
+    if reslist:
+        readme.write_all_details(reslist)
+    else:
+        log.error('ERROR: No results found')
+        sys.exit(1)
 
     # Header for the main README
     readme.write_header()
