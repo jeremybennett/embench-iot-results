@@ -1,6 +1,6 @@
 { "description" : "CORTEX-M4 ARMV7-M GCC 9.2 -O2 -ffunction-sections",
   "Embench version" : "0.5",
-  "architecture family" : "Arm Cortex M",
+  "architecture family" : "Arm",
   "date/time" : "2020-04-24 11:19:00+01:00",
   "platform information" :
   { "nominal clock rate (MHz)" : 16,

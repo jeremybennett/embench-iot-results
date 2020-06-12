@@ -4,7 +4,7 @@
 |- align="left"
 | Embench version || 0.5
 |- align="left"
-| architecture family || Arm Cortex M
+| architecture family || Arm
 |- align="left"
 | date/time || 2020-04-24 11:19:00+01:00
 |}

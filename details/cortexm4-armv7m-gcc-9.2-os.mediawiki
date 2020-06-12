@@ -1,10 +1,10 @@
-== CORTEX-M4 ARMV7-M GCC 9.2 -Os -ffunction-sections -fdata-sections size ==
+== CORTEX-M4 ARMV7-M GCC 9.2 -Os -ffunction-sections ==
 
 {| class="wikitable sortable"
 |- align="left"
 | Embench version || 0.5
 |- align="left"
-| architecture family || Arm Cortex M
+| architecture family || Arm
 |- align="left"
 | date/time || 2020-04-24 11:27:00+01:00
 |}
@@ -71,7 +71,7 @@
 
 {| class="wikitable sortable"
 |- align="left"
-| compiler || -Os -march=armv7-m -mcpu=cortex-m4 -mfloat-abi=soft -mthumb -ffunction-sections -fdata-sections
+| compiler || -Os -march=armv7-m -mcpu=cortex-m4 -mfloat-abi=soft -mthumb -ffunction-sections
 |- align="left"
 | linker || -Wl,-gc-sections -nostartfiles -nostdlib
 |}
@@ -98,9 +98,9 @@ Section types included in size data: text
 ! align="right" | Relative
 |- align="left"
 | aha-mont64
-| align="right" | 1,096
-| align="right" | 1.02
-| align="right" | 4,360
+| align="right" | 1,072
+| align="right" | 1.00
+| align="right" | 4,361
 | align="right" | 0.92
 |- align="left"
 | crc32
@@ -110,20 +110,20 @@ Section types included in size data: text
 | align="right" | 1.00
 |- align="left"
 | cubic
-| align="right" | 1,616
-| align="right" | 1.02
+| align="right" | 1,584
+| align="right" | 1.00
 | align="right" | 3,932
 | align="right" | 1.00
 |- align="left"
 | edn
 | align="right" | 1,324
 | align="right" | 1.00
-| align="right" | 4,374
+| align="right" | 4,373
 | align="right" | 0.92
 |- align="left"
 | huffbench
-| align="right" | 1,266
-| align="right" | 1.02
+| align="right" | 1,242
+| align="right" | 1.00
 | align="right" | 4,844
 | align="right" | 0.85
 |- align="left"
@@ -134,10 +134,10 @@ Section types included in size data: text
 | align="right" | 0.74
 |- align="left"
 | minver
-| align="right" | 1,192
-| align="right" | 1.02
-| align="right" | 4,371
-| align="right" | 0.91
+| align="right" | 1,168
+| align="right" | 1.00
+| align="right" | 4,360
+| align="right" | 0.92
 |- align="left"
 | nbody
 | align="right" | 950
@@ -148,7 +148,7 @@ Section types included in size data: text
 | nettle-aes
 | align="right" | 2,148
 | align="right" | 1.00
-| align="right" | 6,732
+| align="right" | 6,753
 | align="right" | 0.60
 |- align="left"
 | nettle-sha256
@@ -158,28 +158,28 @@ Section types included in size data: text
 | align="right" | 1.05
 |- align="left"
 | nsichneu
-| align="right" | 15,500
-| align="right" | 1.30
-| align="right" | 3,857
-| align="right" | 1.04
+| align="right" | 11,968
+| align="right" | 1.00
+| align="right" | 3,699
+| align="right" | 1.08
 |- align="left"
 | picojpeg
-| align="right" | 7,280
-| align="right" | 1.05
-| align="right" | 5,265
-| align="right" | 0.77
+| align="right" | 6,964
+| align="right" | 1.00
+| align="right" | 5,111
+| align="right" | 0.79
 |- align="left"
 | qrduino
-| align="right" | 5,850
-| align="right" | 1.01
-| align="right" | 4,584
-| align="right" | 0.93
+| align="right" | 5,814
+| align="right" | 1.00
+| align="right" | 4,505
+| align="right" | 0.94
 |- align="left"
 | sglib-combined
-| align="right" | 2,300
-| align="right" | 1.01
-| align="right" | 4,685
-| align="right" | 0.85
+| align="right" | 2,272
+| align="right" | 1.00
+| align="right" | 4,650
+| align="right" | 0.86
 |- align="left"
 | slre
 | align="right" | 2,200
@@ -213,13 +213,13 @@ Section types included in size data: text
 |- align="left"
 ! Geometric mean
 !
-! align="right" | 1.02
+! align="right" | 1.00
 !
-! align="right" | 0.89
+! align="right" | 0.90
 |- align="left"
 ! Geometric standard deviation
 !
-! align="right" | 1.06
+! align="right" | 1.00
 !
 ! align="right" | 1.15
 |}
