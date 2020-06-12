@@ -238,7 +238,7 @@ class Readme:
         fileh.writelines('{| class="wikitable sortable"\n')
         fileh.writelines('! align="left"  |\n')
         fileh.writelines('! colspan="2" align="center" | Size\n')
-        fileh.writelines('! colspan="2" align="center" | Speed\n')
+        fileh.writelines('! colspan="2" align="center" | Speed/MHz\n')
         fileh.writelines('|- align="left"\n')
         fileh.writelines('! align="left" | Benchmark\n')
         fileh.writelines('! align="right"  | Absolute\n')

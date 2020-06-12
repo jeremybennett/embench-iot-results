@@ -82,7 +82,7 @@ Section types included in size data: text
 {| class="wikitable sortable"
 ! align="left"  |
 ! colspan="2" align="center" | Size
-! colspan="2" align="center" | Speed
+! colspan="2" align="center" | Speed/MHz
 |- align="left"
 ! align="left" | Benchmark
 ! align="right"  | Absolute
